@@ -4,7 +4,7 @@ interface AIResponseDisplayProps {
   response: AIResponse | null;
 }
 
-export default function AIResponseDisplay({ response }: AIResponseDisplayProps) {
+const AIResponseDisplay = ({ response }: AIResponseDisplayProps) => {
   if (!response) return null;
 
   return (
@@ -33,3 +33,5 @@ export default function AIResponseDisplay({ response }: AIResponseDisplayProps) 
     </div>
   );
 }
+
+export default AIResponseDisplay;
