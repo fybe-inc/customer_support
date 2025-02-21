@@ -1,5 +1,4 @@
 import { AIResponse } from '../types/types';
-import type { FC } from 'react';
 
 interface AIResponseDisplayProps {
   response: AIResponse | null;
