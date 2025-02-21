@@ -26,7 +26,7 @@ export default function ManualPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="container mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold mb-4">マニュアル管理</h1>
       <form onSubmit={handleSubmit} className="mb-6">
         <textarea
