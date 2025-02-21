@@ -5,16 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const systemPrompt = `
-あなたは当社のカスタマーサポート担当AIです。
-以下のJSON形式で出力してください：
-{
-  "reply": "<最終的な返信メッセージ>",
-  "scenarioType": "<シナリオの種類>",
-  "notes": "<補足>"
-}
-`;
-
 export async function POST(request: Request) {
   try {
     const { inquiry, manuals, products } = await request.json();
@@ -24,10 +14,10 @@ export async function POST(request: Request) {
 以下の情報を参考に回答を生成してください：
 
 【マニュアル情報】
-${manuals.map((m: any) => m.content).join('\n\n')}
+${manuals.map((m: { content: string }) => m.content).join('\n\n')}
 
 【商品情報】
-${products.map((p: any) => p.content).join('\n\n')}
+${products.map((p: { content: string }) => p.content).join('\n\n')}
 
 以下のJSON形式で出力してください：
 {
