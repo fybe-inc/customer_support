@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import type { FC } from 'react';
-import InquiryForm from '../components/InquiryForm';
-import AIResponseDisplay from '../components/AIResponseDisplay';
-import { AIResponse } from '../types/types';
+import InquiryForm from '@/components/InquiryForm';
+import AIResponseDisplay from '@/components/AIResponseDisplay';
+import { AIResponse } from '@/types/types';
 
 const Home: FC = () => {
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
