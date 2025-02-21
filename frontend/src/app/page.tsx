@@ -5,7 +5,8 @@ import { useState } from 'react';
 import type { FC } from 'react';
 import InquiryForm from '@/components/InquiryForm';
 import AIResponseDisplay from '@/components/AIResponseDisplay';
-import { AIResponse } from '@/types/types';
+import { AIResponse, ManualEntry, ProductEntry } from '@/types/types';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const Home: FC = () => {
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
