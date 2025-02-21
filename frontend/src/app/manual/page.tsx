@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import type { ManualEntry } from '@/types/types';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import type { ManualEntry } from '../../types/types';
 
 export default function ManualPage() {
   const [manuals, setManuals] = useLocalStorage<ManualEntry[]>('manuals', []);
