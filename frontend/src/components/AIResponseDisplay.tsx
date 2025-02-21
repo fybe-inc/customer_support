@@ -5,7 +5,7 @@ interface AIResponseDisplayProps {
   response: AIResponse | null;
 }
 
-const AIResponseDisplay: FC<AIResponseDisplayProps> = ({ response }) => {
+export default function AIResponseDisplay({ response }: AIResponseDisplayProps) {
   if (!response) return null;
 
   return (
