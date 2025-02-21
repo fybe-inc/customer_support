@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import type { FC } from 'react';
 import InquiryForm from '../components/InquiryForm';
 import AIResponseDisplay from '../components/AIResponseDisplay';
 import { AIResponse } from '../types/types';
 
-export default function Home() {
+const Home: FC = () => {
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
 
   const handleInquirySubmit = async (inquiry: string) => {
@@ -43,4 +44,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;
