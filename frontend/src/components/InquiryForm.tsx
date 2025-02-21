@@ -1,4 +1,5 @@
 'use client';
+import type { FormEvent } from 'react';
 
 import { useState } from 'react';
 
@@ -10,7 +11,7 @@ export default function InquiryForm({ onSubmit }: InquiryFormProps) {
   const [inquiry, setInquiry] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!inquiry.trim()) return;
 

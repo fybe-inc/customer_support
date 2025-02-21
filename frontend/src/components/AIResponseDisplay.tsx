@@ -1,10 +1,11 @@
 import { AIResponse } from '../types/types';
+import type { FC } from 'react';
 
 interface AIResponseDisplayProps {
   response: AIResponse | null;
 }
 
-export default function AIResponseDisplay({ response }: AIResponseDisplayProps) {
+const AIResponseDisplay: FC<AIResponseDisplayProps> = ({ response }) => {
   if (!response) return null;
 
   return (

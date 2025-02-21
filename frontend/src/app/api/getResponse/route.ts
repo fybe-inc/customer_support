@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       temperature: 0.7,
     });
 
-    const aiMessage = response.data.choices[0]?.message?.content || "";
+    const aiMessage = response.choices[0]?.message?.content || "";
     const parsedResponse = JSON.parse(aiMessage);
 
     return NextResponse.json(parsedResponse);
