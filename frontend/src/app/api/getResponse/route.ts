@@ -7,7 +7,7 @@ const openai = new OpenAI({
 
 export async function POST(request: Request) {
   try {
-    const { inquiry, manuals, products } = await request.json();
+    const { inquiry, manuals, products, scenarios } = await request.json();
 
     const systemPrompt = `
 あなたは当社のカスタマーサポート担当AIです。
@@ -19,11 +19,14 @@ ${manuals.map((m: { content: string }) => m.content).join('\n\n')}
 【商品情報】
 ${products.map((p: { content: string }) => p.content).join('\n\n')}
 
+【シナリオリスト】
+${scenarios.map((s: { title: string, prompt: string }) => `【${s.title}】\n${s.prompt}`).join('\n\n')}
+
 以下のJSON形式で出力してください：
 {
   "reply": "<最終的な返信メッセージ>",
-  "scenarioType": "<シナリオの種類>",
-  "notes": "<補足>"
+  "scenarioType": "<使用したシナリオのタイトル>",
+  "notes": "<補足情報や選択理由など>"
 }`;
 
     const response = await openai.chat.completions.create({

@@ -1,11 +1,10 @@
 'use client';
 
-
 import { useState } from 'react';
 import type { FC } from 'react';
 import InquiryForm from '@/components/InquiryForm';
 import AIResponseDisplay from '@/components/AIResponseDisplay';
-import { AIResponse, ManualEntry, ProductEntry } from '@/types/types';
+import { AIResponse, ManualEntry, ProductEntry, ScenarioEntry } from '@/types/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const Home: FC = () => {
@@ -13,6 +12,7 @@ const Home: FC = () => {
 
   const [manuals] = useLocalStorage<ManualEntry[]>('manuals', []);
   const [products] = useLocalStorage<ProductEntry[]>('products', []);
+  const [scenarios] = useLocalStorage<ScenarioEntry[]>('scenarios', []);
 
   const handleInquirySubmit = async (inquiry: string) => {
     try {
@@ -21,7 +21,7 @@ const Home: FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ inquiry, manuals, products }),
+        body: JSON.stringify({ inquiry, manuals, products, scenarios }),
       });
 
       if (!response.ok) {

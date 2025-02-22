@@ -31,6 +31,14 @@ const Navbar: React.FC = () => {
               商品情報管理
             </Link>
           </li>
+          <li>
+            <Link
+              href="/scenarios"
+              className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
+            >
+              シナリオリスト管理
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
