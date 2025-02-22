@@ -36,6 +36,19 @@ declare module 'react' {
   export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
   export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
   export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
+  export type ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> = {
+    type: T;
+    props: P;
+    key: Key | null;
+  };
+  export type Key = string | number;
+  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null);
+  export type ReactPortal = {
+    children?: React.ReactNode;
+    containerInfo: any;
+    implementation: any;
+    key: Key | null;
+  };
 }
 
 declare global {
