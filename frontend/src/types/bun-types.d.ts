@@ -46,8 +46,6 @@ declare module 'react' {
   export type FormEvent<T = Element> = React.FormEvent<T>;
   export type FormEventHandler<T = Element> = React.FormEventHandler<T>;
   
-  export type FormEventHandler<T extends EventTarget = EventTarget> = (event: FormEvent<T>) => void | Promise<void>;
-  
   export interface HTMLFormElement extends HTMLElement {
     acceptCharset: string;
     action: string;
@@ -65,6 +63,12 @@ declare module 'react' {
     checkValidity(): boolean;
     reportValidity(): boolean;
     requestSubmit(submitter?: HTMLElement): void;
+  }
+  
+  export interface HTMLFormControlsCollection {
+    [index: number]: Element;
+    length: number;
+    namedItem(name: string): Element | null;
   }
 
   export interface ChangeEvent<T = Element> {
