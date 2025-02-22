@@ -19,39 +19,33 @@ declare module 'next/link' {
   export default function Link(props: LinkProps): ReactElement;
 }
 
-declare module 'react' {
-  export * from '@types/react';
-  export interface FC<P = {}> {
+/// <reference types="react" />
+/// <reference types="react-dom" />
+/// <reference types="next" />
+/// <reference types="@types/node" />
+
+declare module 'next/link' {
+  import { ReactElement, ComponentProps } from 'react';
+  export interface LinkProps extends Omit<ComponentProps<'a'>, 'href'> {
+    href: string;
+    as?: string;
+    replace?: boolean;
+    scroll?: boolean;
+    shallow?: boolean;
+    passHref?: boolean;
+    prefetch?: boolean;
+    locale?: string | false;
+    children?: React.ReactNode;
+  }
+  export default function Link(props: LinkProps): ReactElement;
+}
+
+declare namespace React {
+  interface FC<P = {}> {
     (props: P): ReactNode | Promise<ReactNode>;
     displayName?: string;
   }
-  export interface FunctionComponent<P = {}> extends FC<P> {}
-  export type ReactNode = ReactElement | string | number | Iterable<ReactNode> | ReactPortal | boolean | null | undefined;
-  export type FormEvent<T = Element> = React.SyntheticEvent<T>;
-  export type FormEventHandler<T = Element> = (event: FormEvent<T>) => void;
-  export type ChangeEvent<T = Element> = React.SyntheticEvent<T>;
-  export type ChangeEventHandler<T = Element> = (event: ChangeEvent<T>) => void;
-  export type MouseEvent<T = Element> = React.SyntheticEvent<T>;
-  export type MouseEventHandler<T = Element> = (event: MouseEvent<T>) => void;
-  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
-  export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
-  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
-  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
-    type: T;
-    props: P & { children?: ReactNode };
-    key: Key | null;
-  }
-  export type Key = string | number;
-  export type JSXElementConstructor<P> = ((props: P) => ReactNode | Promise<ReactNode>) | (new (props: P) => Component<P, any>);
-  export interface Component<P = {}, S = {}, SS = any> {
-    render(): ReactNode | Promise<ReactNode>;
-  }
-  export interface ReactPortal {
-    children?: ReactNode;
-    containerInfo: any;
-    implementation: any;
-    key: Key | null;
-  }
+  interface FunctionComponent<P = {}> extends FC<P> {}
 }
 
 declare global {
