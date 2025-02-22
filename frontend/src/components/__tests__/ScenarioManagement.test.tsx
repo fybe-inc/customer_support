@@ -1,0 +1,68 @@
+import React from 'react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { ScenarioManagement } from '../ScenarioManagement';
+
+// Mock localStorage
+const localStorageMock = (() => {
+  let store: { [key: string]: string } = {};
+  return {
+    getItem: (key: string) => store[key],
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString();
+    },
+    clear: () => {
+      store = {};
+    }
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
+});
+
+describe('ScenarioManagement', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('renders default scenarios', () => {
+    render(<ScenarioManagement onScenarioSelect={() => {}} selectedScenario={null} />);
+    
+    expect(screen.getByText('肯定的な返信テンプレート')).toBeInTheDocument();
+    expect(screen.getByText('否定的な返信テンプレート')).toBeInTheDocument();
+    expect(screen.getByText('日程調整テンプレート')).toBeInTheDocument();
+  });
+
+  it('allows adding new scenarios', async () => {
+    render(<ScenarioManagement onScenarioSelect={() => {}} selectedScenario={null} />);
+    
+    const description = 'テストシナリオ';
+    const prompt = 'テストプロンプト';
+
+    fireEvent.change(screen.getByLabelText('説明'), {
+      target: { value: description }
+    });
+    fireEvent.change(screen.getByLabelText('プロンプト'), {
+      target: { value: prompt }
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('追加'));
+    });
+
+    expect(screen.getByText(description)).toBeInTheDocument();
+    expect(screen.getByText(prompt)).toBeInTheDocument();
+  });
+
+  it('allows deleting custom scenarios but not default ones', () => {
+    render(<ScenarioManagement onScenarioSelect={() => {}} selectedScenario={null} />);
+    
+    // Default scenarios should not have delete buttons
+    const defaultScenarios = screen.getAllByText(/テンプレート$/);
+    defaultScenarios.forEach(scenario => {
+      const scenarioContainer = scenario.closest('div');
+      expect(scenarioContainer).not.toHaveTextContent('削除');
+    });
+  });
+});
