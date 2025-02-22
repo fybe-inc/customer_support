@@ -21,38 +21,19 @@ declare module 'next/link' {
 
 declare module 'react' {
   export * from '@types/react';
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      div: React.HTMLAttributes<HTMLDivElement>;
-      nav: React.HTMLAttributes<HTMLElement>;
-      ul: React.HTMLAttributes<HTMLUListElement>;
-      li: React.HTMLAttributes<HTMLLIElement>;
-      h1: React.HTMLAttributes<HTMLHeadingElement>;
-      h2: React.HTMLAttributes<HTMLHeadingElement>;
-      h3: React.HTMLAttributes<HTMLHeadingElement>;
-      h4: React.HTMLAttributes<HTMLHeadingElement>;
-      p: React.HTMLAttributes<HTMLParagraphElement>;
-      span: React.HTMLAttributes<HTMLSpanElement>;
-      main: React.HTMLAttributes<HTMLElement>;
-      form: React.HTMLAttributes<HTMLFormElement>;
-      input: React.HTMLAttributes<HTMLInputElement>;
-      textarea: React.HTMLAttributes<HTMLTextAreaElement>;
-      button: React.HTMLAttributes<HTMLButtonElement>;
-      label: React.HTMLAttributes<HTMLLabelElement>;
-      pre: React.HTMLAttributes<HTMLPreElement>;
-      a: React.HTMLAttributes<HTMLAnchorElement>;
-      img: React.HTMLAttributes<HTMLImageElement>;
-      select: React.HTMLAttributes<HTMLSelectElement>;
-      option: React.HTMLAttributes<HTMLOptionElement>;
-      header: React.HTMLAttributes<HTMLElement>;
-      footer: React.HTMLAttributes<HTMLElement>;
-      section: React.HTMLAttributes<HTMLElement>;
-      article: React.HTMLAttributes<HTMLElement>;
-      aside: React.HTMLAttributes<HTMLElement>;
-      [elemName: string]: any;
-    }
+  export interface FC<P = {}> {
+    (props: P): ReactElement<any, any> | null;
+    displayName?: string;
   }
+  export interface FunctionComponent<P = {}> extends FC<P> {}
+  export type ReactNode = ReactElement | string | number | Iterable<ReactNode> | ReactPortal | boolean | null | undefined;
+  export type FormEvent<T = Element> = React.SyntheticEvent<T>;
+  export type FormEventHandler<T = Element> = (event: FormEvent<T>) => void;
+  export type ChangeEvent<T = Element> = React.SyntheticEvent<T>;
+  export type ChangeEventHandler<T = Element> = (event: ChangeEvent<T>) => void;
+  export type MouseEvent<T = Element> = React.SyntheticEvent<T>;
+  export type MouseEventHandler<T = Element> = (event: MouseEvent<T>) => void;
+  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
+  export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
+  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
 }
