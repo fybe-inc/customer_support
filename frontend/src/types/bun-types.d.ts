@@ -21,7 +21,7 @@ declare module 'react' {
   
   export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
     type: T;
-    props: P;
+    props: P & { children?: ReactNode };
     key: Key | null;
   }
   
@@ -133,7 +133,7 @@ declare module 'next/link' {
     locale?: string | false;
     children?: React.ReactNode;
   }
-  export default function Link(props: LinkProps): React.ReactNode;
+  export default function Link(props: LinkProps): ReactElement;
 }
 
 declare global {
