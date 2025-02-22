@@ -40,12 +40,14 @@ declare module 'next/link' {
   export default function Link(props: LinkProps): ReactElement;
 }
 
-declare namespace React {
-  interface FC<P = {}> {
-    (props: P): ReactNode | Promise<ReactNode>;
-    displayName?: string;
+declare global {
+  namespace React {
+    interface FC<P = {}> {
+      (props: P): ReactNode | Promise<ReactNode>;
+      displayName?: string;
+    }
+    interface FunctionComponent<P = {}> extends FC<P> {}
   }
-  interface FunctionComponent<P = {}> extends FC<P> {}
 }
 
 declare global {
