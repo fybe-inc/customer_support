@@ -1,4 +1,5 @@
-import type { FC } from 'react';
+/** @jest-environment jsdom */
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AIResponseDisplay from '../AIResponseDisplay';
 import type { AIResponse } from '../../types/types';
