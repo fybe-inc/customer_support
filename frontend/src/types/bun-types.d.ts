@@ -22,7 +22,7 @@ declare module 'next/link' {
 declare module 'react' {
   export * from '@types/react';
   export interface FC<P = {}> {
-    (props: P): ReactElement<any, any> | null;
+    (props: P): ReactNode | Promise<ReactNode>;
     displayName?: string;
   }
   export interface FunctionComponent<P = {}> extends FC<P> {}
@@ -38,13 +38,13 @@ declare module 'react' {
   export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
   export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
     type: T;
-    props: P;
+    props: P & { children?: ReactNode };
     key: Key | null;
   }
   export type Key = string | number;
-  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null) | (new (props: P) => Component<P, any>);
+  export type JSXElementConstructor<P> = ((props: P) => ReactNode | Promise<ReactNode>) | (new (props: P) => Component<P, any>);
   export interface Component<P = {}, S = {}, SS = any> {
-    render(): ReactNode;
+    render(): ReactNode | Promise<ReactNode>;
   }
   export interface ReactPortal {
     children?: ReactNode;
