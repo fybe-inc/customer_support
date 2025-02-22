@@ -19,7 +19,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               </Link>
             </li>
             <li>
-              <Link href="/prompts" className="block p-2 text-gray-700 hover:bg-gray-100 rounded">
+              <Link href="/scenarios" className="block p-2 text-gray-700 hover:bg-gray-100 rounded">
                 プロンプト設定
               </Link>
             </li>
