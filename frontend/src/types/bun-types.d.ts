@@ -15,14 +15,15 @@ declare module 'react' {
   export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
   
   export interface FunctionComponent<P = {}> {
-    (props: P, context?: any): ReactElement | null;
+    (props: P, context?: any): ReactNode;
     displayName?: string;
   }
   
   export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
     type: T;
-    props: P & { children?: ReactNode };
+    props: P;
     key: Key | null;
+    children?: ReactNode;
   }
   
   export type Key = string | number;
