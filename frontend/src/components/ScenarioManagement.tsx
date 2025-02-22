@@ -32,10 +32,6 @@ export const ScenarioManagement: React.FC<ScenarioManagementProps> = ({
     description: ''
   });
 
-
-
-
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newScenario.prompt && newScenario.description) {
