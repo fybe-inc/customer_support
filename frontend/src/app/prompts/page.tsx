@@ -41,7 +41,7 @@ const PromptsPage: FC = () => {
           onScenarioSelect={() => {}} 
           selectedScenario={null}
           scenarios={scenarios}
-          setScenarios={setScenarios}
+          setScenarios={(value) => setScenarios(Array.isArray(value) ? value : value(scenarios))}
         />
       </div>
     </div>

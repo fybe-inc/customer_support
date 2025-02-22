@@ -27,7 +27,19 @@ describe('ScenarioManagement', () => {
   });
 
   it('renders default scenarios', () => {
-    render(<ScenarioManagement onScenarioSelect={() => {}} selectedScenario={null} />);
+    const scenarios: Array<{
+      id: string;
+      description: string;
+      prompt: string;
+    }> = [];
+    render(
+      <ScenarioManagement 
+        onScenarioSelect={() => {}} 
+        selectedScenario={null}
+        scenarios={scenarios}
+        setScenarios={() => {}}
+      />
+    );
     
     expect(screen.getByText('肯定的な返信テンプレート')).toBeInTheDocument();
     expect(screen.getByText('否定的な返信テンプレート')).toBeInTheDocument();
@@ -35,7 +47,19 @@ describe('ScenarioManagement', () => {
   });
 
   it('allows adding new scenarios', async () => {
-    render(<ScenarioManagement onScenarioSelect={() => {}} selectedScenario={null} />);
+    const scenarios: Array<{
+      id: string;
+      description: string;
+      prompt: string;
+    }> = [];
+    render(
+      <ScenarioManagement 
+        onScenarioSelect={() => {}} 
+        selectedScenario={null}
+        scenarios={scenarios}
+        setScenarios={() => {}}
+      />
+    );
     
     const description = 'テストシナリオ';
     const prompt = 'テストプロンプト';
@@ -56,7 +80,19 @@ describe('ScenarioManagement', () => {
   });
 
   it('allows deleting custom scenarios but not default ones', () => {
-    render(<ScenarioManagement onScenarioSelect={() => {}} selectedScenario={null} />);
+    const scenarios: Array<{
+      id: string;
+      description: string;
+      prompt: string;
+    }> = [];
+    render(
+      <ScenarioManagement 
+        onScenarioSelect={() => {}} 
+        selectedScenario={null}
+        scenarios={scenarios}
+        setScenarios={() => {}}
+      />
+    );
     
     // Default scenarios should not have delete buttons
     const defaultScenarios = screen.getAllByText(/テンプレート$/);

@@ -8,7 +8,7 @@ export default function ProductPage() {
   const [products, setProducts] = useLocalStorage<ProductEntry[]>('products', []);
   const [content, setContent] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!content.trim()) return;
 

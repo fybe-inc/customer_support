@@ -5,7 +5,9 @@ interface AIResponseDisplayProps {
 }
 
 const AIResponseDisplay = ({ response }: AIResponseDisplayProps) => {
-  if (!response) return null;
+  if (!response || !response.scenarios.length) return null;
+
+  const scenario = response.scenarios[0]; // Display first scenario by default
 
   return (
     <div className="w-full max-w-2xl border rounded-lg p-6 bg-white">
@@ -14,19 +16,19 @@ const AIResponseDisplay = ({ response }: AIResponseDisplayProps) => {
         <div>
           <h3 className="font-semibold mb-2">返信メッセージ:</h3>
           <div className="p-4 bg-gray-50 rounded">
-            {response.reply}
+            {scenario.reply}
           </div>
         </div>
         <div>
           <h3 className="font-semibold mb-2">シナリオタイプ:</h3>
           <div className="text-sm text-gray-600">
-            {response.scenarioType}
+            {scenario.scenarioType}
           </div>
         </div>
         <div>
           <h3 className="font-semibold mb-2">補足情報:</h3>
           <div className="text-sm text-gray-600">
-            {response.notes}
+            {scenario.notes}
           </div>
         </div>
       </div>

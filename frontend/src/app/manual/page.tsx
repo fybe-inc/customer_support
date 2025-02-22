@@ -8,7 +8,7 @@ export default function ManualPage() {
   const [manuals, setManuals] = useLocalStorage<ManualEntry[]>('manuals', []);
   const [content, setContent] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!content.trim()) return;
 
