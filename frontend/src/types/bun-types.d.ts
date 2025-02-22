@@ -16,34 +16,43 @@ declare module 'next/link' {
     locale?: string | false;
     children?: React.ReactNode;
   }
-  export default function Link(props: LinkProps): ReactElement;
+  export default function Link(props: LinkProps): ReactElement<any, any>;
 }
 
 declare module 'react' {
-  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
+  export type Key = string | number;
+  export type ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> = {
     type: T;
     props: P;
     key: Key | null;
-  }
-  
-  export type Key = string | number;
-  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null);
-  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
+  };
+  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null) | (new (props: P) => Component<any, any>);
+  export type ReactNode = ReactElement | string | number | Iterable<ReactNode> | ReactPortal | boolean | null | undefined;
   
   export interface ReactPortal {
+    key: Key | null;
     children: ReactNode;
     containerInfo: any;
     implementation: any;
-    key: Key | null;
+  }
+
+  export interface Component<P = {}, S = {}> {
+    render(): ReactNode;
+    props: Readonly<P>;
+    state: Readonly<S>;
+    setState(state: S | ((prevState: Readonly<S>, props: Readonly<P>) => S | null)): void;
   }
 
   export interface FC<P = {}> {
-    (props: P, context?: any): ReactElement | null;
+    (props: P): ReactElement<any, any> | null;
     displayName?: string;
   }
-  export interface FunctionComponent<P = {}> extends FC<P> {}
 
-  export interface FormEvent<T = Element> {
+  export interface FormEvent<T = Element> extends SyntheticEvent<T> {}
+  export interface ChangeEvent<T = Element> extends SyntheticEvent<T> {}
+  export interface MouseEvent<T = Element> extends SyntheticEvent<T> {}
+  
+  export interface SyntheticEvent<T = Element> {
     bubbles: boolean;
     cancelable: boolean;
     currentTarget: T;
@@ -58,9 +67,9 @@ declare module 'react' {
     type: string;
   }
 
-  export interface ChangeEvent<T = Element> {
-    target: EventTarget & T;
-  }
+  export type FormEventHandler<T = Element> = (event: FormEvent<T>) => void;
+  export type ChangeEventHandler<T = Element> = (event: ChangeEvent<T>) => void;
+  export type MouseEventHandler<T = Element> = (event: MouseEvent<T>) => void;
 
   export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
   export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
