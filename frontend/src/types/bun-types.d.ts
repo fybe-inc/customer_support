@@ -27,6 +27,15 @@ declare module 'react' {
   }
   export interface FunctionComponent<P = {}> extends FC<P> {}
   export type ReactNode = ReactElement | string | number | Iterable<ReactNode> | ReactPortal | boolean | null | undefined;
+
+  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
+  export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
+  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
+
+  export interface FormEvent<T = Element> extends React.SyntheticEvent<T> {
+    target: EventTarget & T;
+  }
+  export type FormEventHandler<T = Element> = (event: FormEvent<T>) => void;
 }
 
 declare global {
