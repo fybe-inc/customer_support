@@ -1,6 +1,6 @@
 'use client';
 
-/// <reference types="react" />
+import * as React from 'react';
 import Link from 'next/link';
 
 const Navbar: React.FC = () => {
