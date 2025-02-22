@@ -1,8 +1,8 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
+import React from 'react';
 import type { FC } from 'react';
+import Link from 'next/link';
 
 const Navbar: React.FC = () => {
   return (
