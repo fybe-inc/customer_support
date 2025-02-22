@@ -7,16 +7,16 @@ declare module 'react' {
   export type FC<P = {}> = FunctionComponent<P>;
   
   export interface ReactPortal {
-    children?: React.ReactNode;
+    children?: ReactNode;
     containerInfo: any;
     implementation: any;
     key: Key | null;
   }
 
-  export type ReactNode = React.ReactNode;
+  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
   
   export interface FunctionComponent<P = {}> {
-    (props: P, context?: any): React.ReactNode | Promise<React.ReactNode>;
+    (props: P, context?: any): ReactNode | Promise<ReactNode>;
     displayName?: string;
   }
   
