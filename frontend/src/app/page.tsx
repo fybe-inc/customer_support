@@ -14,6 +14,7 @@ const Home: FC = () => {
   const [manuals] = useLocalStorage<ManualEntry[]>('manuals', []);
   const [products] = useLocalStorage<ProductEntry[]>('products', []);
 
+
   const handleInquirySubmit = async (inquiry: string) => {
     try {
       const response = await fetch('/api/getResponse', {

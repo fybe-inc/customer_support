@@ -19,6 +19,14 @@ const Navbar: React.FC = () => {
           </li>
           <li>
             <Link 
+              href="/prompts"
+              className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
+            >
+              プロンプト設定
+            </Link>
+          </li>
+          <li>
+            <Link 
               href="/products"
               className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
             >
