@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AIResponseDisplay from '../AIResponseDisplay';
-import { AIResponse } from '../../types/types';
+import type { AIResponse } from '../../types/types';
 import '@testing-library/jest-dom';
 
 describe('AIResponseDisplay', () => {
