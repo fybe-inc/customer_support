@@ -17,11 +17,11 @@ declare module 'next/link' {
   }
   export default function Link(props: LinkProps): JSX.Element;
 }
-    className?: string;
-    onClick?: (event: MouseEvent<T>) => void;
-    onChange?: (event: ChangeEvent<T>) => void;
-    onSubmit?: (event: FormEvent<T>) => void;
-    value?: string;
+
+declare module 'react' {
+  interface FunctionComponent<P = {}> extends React.FunctionComponent<P> {}
+  interface FC<P = {}> extends React.FC<P> {}
+}
     type?: string;
     required?: boolean;
     rows?: number;
