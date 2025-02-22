@@ -20,11 +20,32 @@ declare module 'next/link' {
 }
 
 declare module 'react' {
-  interface FunctionComponent<P = {}> {
+  export interface FunctionComponent<P = {}> {
     (props: P, context?: any): ReactElement | null;
     displayName?: string;
   }
-  interface FC<P = {}> extends FunctionComponent<P> {}
+  export interface FC<P = {}> extends FunctionComponent<P> {}
+  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
+  
+  export interface FormEvent<T = Element> extends SyntheticEvent<T> {
+    target: EventTarget & T;
+  }
+  export type FormEventHandler<T = Element> = (event: FormEvent<T>) => void;
+  
+  export interface ChangeEvent<T = Element> extends SyntheticEvent<T> {
+    target: EventTarget & T;
+  }
+  export type ChangeEventHandler<T = Element> = (event: ChangeEvent<T>) => void;
+  
+  export interface SyntheticEvent<T = Element> {
+    preventDefault(): void;
+    stopPropagation(): void;
+    target: EventTarget & T;
+  }
+  
+  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
+  export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
+  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
 }
 
 declare global {
