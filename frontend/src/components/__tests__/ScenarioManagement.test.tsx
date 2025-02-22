@@ -1,5 +1,6 @@
 /** @jest-environment jsdom */
-import React from 'react';
+/** @jest-environment jsdom */
+import * as React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ScenarioManagement } from '../ScenarioManagement';
