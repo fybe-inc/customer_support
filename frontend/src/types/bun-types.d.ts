@@ -20,9 +20,51 @@ declare module 'next/link' {
 }
 
 declare module 'react' {
-  export * from '@types/react';
-  export interface FC<P = {}> extends React.FC<P> {}
-  export interface FunctionComponent<P = {}> extends React.FunctionComponent<P> {}
+  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
+    type: T;
+    props: P;
+    key: Key | null;
+  }
+  
+  export type Key = string | number;
+  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null);
+  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
+  
+  export interface ReactPortal {
+    children: ReactNode;
+    containerInfo: any;
+    implementation: any;
+    key: Key | null;
+  }
+
+  export interface FC<P = {}> {
+    (props: P, context?: any): ReactElement | null;
+    displayName?: string;
+  }
+  export interface FunctionComponent<P = {}> extends FC<P> {}
+
+  export interface FormEvent<T = Element> {
+    bubbles: boolean;
+    cancelable: boolean;
+    currentTarget: T;
+    defaultPrevented: boolean;
+    eventPhase: number;
+    isTrusted: boolean;
+    nativeEvent: Event;
+    preventDefault(): void;
+    stopPropagation(): void;
+    target: EventTarget & T;
+    timeStamp: number;
+    type: string;
+  }
+
+  export interface ChangeEvent<T = Element> {
+    target: EventTarget & T;
+  }
+
+  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
+  export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
+  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
 }
 
 declare global {
