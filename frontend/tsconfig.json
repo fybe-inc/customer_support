@@ -21,8 +21,9 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["bun-types", "jest", "node"],
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "types": ["bun-types", "jest", "node", "react", "react-dom"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "skipLibCheck": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
