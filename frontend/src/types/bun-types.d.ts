@@ -55,6 +55,11 @@ declare global {
       toBeEmptyDOMElement(): R;
     }
   }
+  namespace NodeJS {
+    interface ProcessEnv {
+      OPENAI_API_KEY: string;
+    }
+  }
 }
 
 declare global {
