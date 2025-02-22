@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Scenario } from '../types/types';
+import type { FC, FormEvent as ReactFormEvent } from 'react';
+import { useState } from 'react';
+import type { Scenario } from '../types/types';
 
 interface ScenarioManagementProps {
   onScenarioSelect: (scenario: Scenario | null) => void;
@@ -10,7 +11,7 @@ interface ScenarioManagementProps {
   setScenarios: (scenarios: Scenario[] | ((prev: Scenario[]) => Scenario[])) => void;
 }
 
-export const ScenarioManagement: React.FC<ScenarioManagementProps> = ({
+export const ScenarioManagement: FC<ScenarioManagementProps> = ({
   onScenarioSelect,
   selectedScenario,
   scenarios,
@@ -27,23 +28,31 @@ export const ScenarioManagement: React.FC<ScenarioManagementProps> = ({
   const deleteScenario = (id: string) => {
     setScenarios(prev => prev.filter(scenario => scenario.id !== id));
   };
+
   const [newScenario, setNewScenario] = useState<Omit<Scenario, 'id'>>({
     prompt: '',
-    description: ''
+    title: ''
   });
 
-
-
-
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: ReactFormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newScenario.prompt && newScenario.description) {
+    if (newScenario.prompt && newScenario.title) {
       addScenario(newScenario);
       setNewScenario({
         prompt: '',
-        description: ''
+        title: ''
       });
+    }
+  };
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    const id = e.currentTarget.dataset.scenarioId;
+    if (id) {
+      if (selectedScenario?.id === id) {
+        onScenarioSelect(null);
+      }
+      deleteScenario(id);
     }
   };
 
@@ -62,17 +71,13 @@ export const ScenarioManagement: React.FC<ScenarioManagementProps> = ({
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-medium">{scenario.description}</h4>
+                  <h4 className="font-medium">{scenario.title}</h4>
                   <p className="text-sm text-gray-600 mt-2">{scenario.prompt}</p>
                 </div>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (selectedScenario?.id === scenario.id) {
-                      onScenarioSelect(null);
-                    }
-                    deleteScenario(scenario.id);
-                  }}
+                  type="button"
+                  data-scenario-id={scenario.id}
+                  onClick={handleDelete}
                   className="text-red-600 hover:text-red-800"
                 >
                   削除
@@ -87,34 +92,36 @@ export const ScenarioManagement: React.FC<ScenarioManagementProps> = ({
         <h3 className="text-xl font-semibold mb-4">新規プロンプトの追加</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
-              説明
-              <input
-                type="text"
-                value={newScenario.description}
-                onChange={(e) => setNewScenario({
-                  ...newScenario,
-                  description: e.target.value
-                })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                required
-              />
+            <label htmlFor="title" className="block text-sm font-medium mb-1">
+              タイトル
             </label>
+            <input
+              id="title"
+              type="text"
+              value={newScenario.title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewScenario({
+                ...newScenario,
+                title: e.target.value
+              })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              required
+            />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="prompt" className="block text-sm font-medium mb-1">
               プロンプト
-              <textarea
-                value={newScenario.prompt}
-                onChange={(e) => setNewScenario({
-                  ...newScenario,
-                  prompt: e.target.value
-                })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                rows={4}
-                required
-              />
             </label>
+            <textarea
+              id="prompt"
+              value={newScenario.prompt}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewScenario({
+                ...newScenario,
+                prompt: e.target.value
+              })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              rows={4}
+              required
+            />
           </div>
           <button
             type="submit"

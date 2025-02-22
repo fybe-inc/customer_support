@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { FC } from 'react';
 import InquiryForm from '@/components/InquiryForm';
 import AIResponseDisplay from '@/components/AIResponseDisplay';
-import { AIResponse, ManualEntry, ProductEntry } from '@/types/types';
+import { AIResponse, ManualEntry, ProductEntry, Scenario } from '@/types/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const Home: FC = () => {
@@ -12,12 +12,7 @@ const Home: FC = () => {
 
   const [manuals] = useLocalStorage<ManualEntry[]>('manuals', []);
   const [products] = useLocalStorage<ProductEntry[]>('products', []);
-  const [scenarios] = useLocalStorage<Array<{
-    id: string;
-    description: string;
-    prompt: string;
-  }>>('scenarios', []);
-
+  const [scenarios] = useLocalStorage<Scenario[]>('scenarios', []);
 
   const handleInquirySubmit = async (inquiry: string) => {
     try {
@@ -26,7 +21,15 @@ const Home: FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ inquiry, manuals, products, scenarios }),
+        body: JSON.stringify({
+          inquiry,
+          manuals,
+          products,
+          scenarios: scenarios.map(s => ({
+            title: s.title,  // titleを含める
+            prompt: s.prompt
+          }))
+        }),
       });
 
       if (!response.ok) {

@@ -11,7 +11,7 @@ export interface AIResponse {
 
 export interface ScenarioEntry {
   id: string;
-  description: string;
+  title: string;
   prompt: string;
 }
 
@@ -36,8 +36,8 @@ export interface ProductEntry {
 
 export interface Scenario {
   id: string;
+  title: string;  // descriptionからtitleに変更
   prompt: string;
-  description: string;
 }
 
 export interface ScenarioState {
