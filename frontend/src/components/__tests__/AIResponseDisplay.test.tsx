@@ -1,9 +1,8 @@
-/// <reference types="@testing-library/jest-dom" />
-import * as React from 'react';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AIResponseDisplay from '../AIResponseDisplay';
 import { AIResponse } from '../../types/types';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 describe('AIResponseDisplay', () => {
   const mockResponse: AIResponse = {
