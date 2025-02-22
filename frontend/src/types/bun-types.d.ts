@@ -1,5 +1,4 @@
 /// <reference types="react" />
-/// <reference types="react" />
 /// <reference types="react-dom" />
 /// <reference types="next" />
 /// <reference types="@types/node" />
@@ -41,7 +40,7 @@ declare global {
       [elemName: string]: any;
     }
   }
-}  export interface HTMLAttributes<T> {
+}
     className?: string;
     onClick?: (event: MouseEvent<T>) => void;
     onChange?: (event: ChangeEvent<T>) => void;
