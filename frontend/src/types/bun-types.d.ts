@@ -48,6 +48,13 @@ declare global {
     }
     interface FunctionComponent<P = {}> extends FC<P> {}
   }
+  namespace jest {
+    interface Matchers<R> {
+      toBeInTheDocument(): R;
+      toHaveTextContent(text: string): R;
+      toBeEmptyDOMElement(): R;
+    }
+  }
 }
 
 declare global {
