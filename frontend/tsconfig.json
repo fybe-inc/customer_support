@@ -24,7 +24,9 @@
     "types": ["bun-types", "jest", "node", "react", "react-dom", "@testing-library/jest-dom"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "moduleResolution": "node"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
