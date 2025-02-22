@@ -1,12 +1,12 @@
 'use client';
 
-import Navbar from '@/components/Navbar';
 import { useState } from 'react';
 import type { FC } from 'react';
 import InquiryForm from '@/components/InquiryForm';
 import AIResponseDisplay from '@/components/AIResponseDisplay';
 import { AIResponse, ManualEntry, ProductEntry } from '@/types/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import Layout from '@/components/Layout';
 
 const Home: FC = () => {
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
@@ -38,10 +38,9 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Navbar />
-      <main className="flex-1 py-12">
-        <div className="container mx-auto px-4">
+    <Layout>
+      <div className="p-6">
+        <div className="container mx-auto">
           <h1 className="text-3xl font-bold text-center mb-8">
             AIカスタマーサポート支援システム
           </h1>
@@ -50,8 +49,8 @@ const Home: FC = () => {
             <AIResponseDisplay response={aiResponse} />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </Layout>
   );
 };
 
