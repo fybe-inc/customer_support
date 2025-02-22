@@ -3,7 +3,6 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ScenarioManagement } from '../ScenarioManagement';
 import type { Scenario } from '../../types/types';
-import type { HTMLElement } from '@testing-library/dom';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -86,7 +85,7 @@ describe('ScenarioManagement', () => {
     
     // Default scenarios should not have delete buttons
     const defaultScenarios = screen.getAllByText(/テンプレート$/);
-    defaultScenarios.forEach((scenario: HTMLElement) => {
+    defaultScenarios.forEach((scenario: Element) => {
       const scenarioContainer = scenario.closest('div');
       expect(scenarioContainer).not.toHaveTextContent('削除');
     });
