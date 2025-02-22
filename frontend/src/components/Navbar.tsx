@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
               href="/prompts"
               className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
             >
-              プロンプト設定
+              事前シナリオ
             </Link>
           </li>
           <li>
@@ -37,14 +37,6 @@ const Navbar: React.FC = () => {
               className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
             >
               商品情報管理
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/scenarios"
-              className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
-            >
-              シナリオリスト管理
             </Link>
           </li>
         </ul>

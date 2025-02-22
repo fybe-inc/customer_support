@@ -2,7 +2,7 @@
 
 import { FC, useEffect } from 'react';
 import { ScenarioManagement } from '@/components/ScenarioManagement';
-import Layout from '@/components/Layout';
+
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Scenario } from '@/types/types';
 
@@ -34,19 +34,17 @@ const PromptsPage: FC = () => {
   }, [scenarios.length, setScenarios]);
 
   return (
-    <Layout>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">プロンプト設定</h1>
-        <div className="bg-white rounded-lg shadow">
-          <ScenarioManagement 
-            onScenarioSelect={() => {}} 
-            selectedScenario={null}
-            scenarios={scenarios}
-            setScenarios={setScenarios}
-          />
-        </div>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">事前シナリオ</h1>
+      <div className="bg-white rounded-lg shadow">
+        <ScenarioManagement 
+          onScenarioSelect={() => {}} 
+          selectedScenario={null}
+          scenarios={scenarios}
+          setScenarios={setScenarios}
+        />
       </div>
-    </Layout>
+    </div>
   );
 };
 
