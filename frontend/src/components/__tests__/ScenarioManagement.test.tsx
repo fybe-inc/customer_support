@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ScenarioManagement } from '../ScenarioManagement';
+import type { Scenario } from '../../types/types';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -27,11 +28,7 @@ describe('ScenarioManagement', () => {
   });
 
   it('renders default scenarios', () => {
-    const scenarios: Array<{
-      id: string;
-      description: string;
-      prompt: string;
-    }> = [];
+    const scenarios: Scenario[] = [];
     render(
       <ScenarioManagement 
         onScenarioSelect={() => {}} 
@@ -47,11 +44,7 @@ describe('ScenarioManagement', () => {
   });
 
   it('allows adding new scenarios', async () => {
-    const scenarios: Array<{
-      id: string;
-      description: string;
-      prompt: string;
-    }> = [];
+    const scenarios: Scenario[] = [];
     render(
       <ScenarioManagement 
         onScenarioSelect={() => {}} 
@@ -80,11 +73,7 @@ describe('ScenarioManagement', () => {
   });
 
   it('allows deleting custom scenarios but not default ones', () => {
-    const scenarios: Array<{
-      id: string;
-      description: string;
-      prompt: string;
-    }> = [];
+    const scenarios: Scenario[] = [];
     render(
       <ScenarioManagement 
         onScenarioSelect={() => {}} 
@@ -96,7 +85,7 @@ describe('ScenarioManagement', () => {
     
     // Default scenarios should not have delete buttons
     const defaultScenarios = screen.getAllByText(/テンプレート$/);
-    defaultScenarios.forEach(scenario => {
+    defaultScenarios.forEach((scenario: Element) => {
       const scenarioContainer = scenario.closest('div');
       expect(scenarioContainer).not.toHaveTextContent('削除');
     });
