@@ -6,24 +6,24 @@
 declare module 'react' {
   export type FC<P = {}> = FunctionComponent<P>;
   
-  export interface ReactPortal extends ReactElement {
+  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
+  
+  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
+    type: T;
+    props: P & { children?: ReactNode };
+    key: Key | null;
+  }
+
+  export interface ReactPortal {
+    children: ReactNode;
     containerInfo: any;
     implementation: any;
     key: Key | null;
   }
 
-  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
-  
   export interface FunctionComponent<P = {}> {
-    (props: P, context?: any): ReactNode;
+    (props: P, context?: any): ReactElement | null;
     displayName?: string;
-  }
-  
-  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
-    type: T;
-    props: P;
-    key: Key | null;
-    children?: ReactNode;
   }
   
   export type Key = string | number;
