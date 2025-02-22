@@ -37,3 +37,37 @@ declare module 'react' {
   export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
   export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
 }
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      div: React.HTMLAttributes<HTMLDivElement>;
+      nav: React.HTMLAttributes<HTMLElement>;
+      ul: React.HTMLAttributes<HTMLUListElement>;
+      li: React.HTMLAttributes<HTMLLIElement>;
+      h1: React.HTMLAttributes<HTMLHeadingElement>;
+      h2: React.HTMLAttributes<HTMLHeadingElement>;
+      h3: React.HTMLAttributes<HTMLHeadingElement>;
+      h4: React.HTMLAttributes<HTMLHeadingElement>;
+      p: React.HTMLAttributes<HTMLParagraphElement>;
+      span: React.HTMLAttributes<HTMLSpanElement>;
+      main: React.HTMLAttributes<HTMLElement>;
+      form: React.HTMLAttributes<HTMLFormElement>;
+      input: React.HTMLAttributes<HTMLInputElement>;
+      textarea: React.HTMLAttributes<HTMLTextAreaElement>;
+      button: React.HTMLAttributes<HTMLButtonElement>;
+      label: React.HTMLAttributes<HTMLLabelElement>;
+      pre: React.HTMLAttributes<HTMLPreElement>;
+      a: React.HTMLAttributes<HTMLAnchorElement>;
+      img: React.HTMLAttributes<HTMLImageElement>;
+      select: React.HTMLAttributes<HTMLSelectElement>;
+      option: React.HTMLAttributes<HTMLOptionElement>;
+      header: React.HTMLAttributes<HTMLElement>;
+      footer: React.HTMLAttributes<HTMLElement>;
+      section: React.HTMLAttributes<HTMLElement>;
+      article: React.HTMLAttributes<HTMLElement>;
+      aside: React.HTMLAttributes<HTMLElement>;
+      [elemName: string]: any;
+    }
+  }
+}
