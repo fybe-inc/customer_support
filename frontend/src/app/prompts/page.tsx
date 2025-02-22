@@ -2,7 +2,7 @@
 
 import { FC, useEffect } from 'react';
 import { ScenarioManagement } from '@/components/ScenarioManagement';
-import Layout from '@/components/Layout';
+import Layout from '../../components/Layout';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Scenario } from '@/types/types';
 
