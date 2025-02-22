@@ -1,26 +1,20 @@
+/// <reference types="@testing-library/jest-dom" />
 import { render, screen } from '@testing-library/react';
 import AIResponseDisplay from '../AIResponseDisplay';
 import '@testing-library/jest-dom';
+import { AIResponse } from '../../types/types';
 
 describe('AIResponseDisplay', () => {
-  const mockResponse = {
+  const mockResponse: AIResponse = {
     scenarios: [{
       reply: 'テスト返信',
       scenarioType: 'テストシナリオ',
       notes: 'テスト補足',
-      sentiment: 'positive' as const
+      sentiment: 'positive'
     }]
   };
 
   it('renders AI response when provided', () => {
-    const mockResponse = {
-      scenarios: [{
-        reply: "Test reply",
-        scenarioType: "Test type",
-        notes: "Test notes",
-        sentiment: "positive" as const
-      }]
-    };
     render(<AIResponseDisplay response={mockResponse} />);
     
     expect(screen.getByText('AI回答案')).toBeInTheDocument();
