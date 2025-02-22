@@ -17,30 +17,6 @@ declare module 'next/link' {
   }
   export default function Link(props: LinkProps): JSX.Element;
 }
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      div: React.HTMLAttributes<HTMLDivElement>;
-      nav: React.HTMLAttributes<HTMLElement>;
-      ul: React.HTMLAttributes<HTMLUListElement>;
-      li: React.HTMLAttributes<HTMLLIElement>;
-      h1: React.HTMLAttributes<HTMLHeadingElement>;
-      h2: React.HTMLAttributes<HTMLHeadingElement>;
-      h3: React.HTMLAttributes<HTMLHeadingElement>;
-      h4: React.HTMLAttributes<HTMLHeadingElement>;
-      p: React.HTMLAttributes<HTMLParagraphElement>;
-      span: React.HTMLAttributes<HTMLSpanElement>;
-      main: React.HTMLAttributes<HTMLElement>;
-      form: React.HTMLAttributes<HTMLFormElement>;
-      input: React.HTMLAttributes<HTMLInputElement>;
-      textarea: React.HTMLAttributes<HTMLTextAreaElement>;
-      button: React.HTMLAttributes<HTMLButtonElement>;
-      label: React.HTMLAttributes<HTMLLabelElement>;
-      [elemName: string]: any;
-    }
-  }
-}
     className?: string;
     onClick?: (event: MouseEvent<T>) => void;
     onChange?: (event: ChangeEvent<T>) => void;
