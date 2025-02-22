@@ -11,7 +11,7 @@ export default function InquiryForm({ onSubmit }: InquiryFormProps) {
   const [inquiry, setInquiry] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (!inquiry.trim()) return;
 

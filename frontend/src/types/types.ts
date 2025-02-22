@@ -9,6 +9,12 @@ export interface AIResponse {
   scenarios: AIScenario[];
 }
 
+export interface ScenarioEntry {
+  id: string;
+  description: string;
+  prompt: string;
+}
+
 export interface InquiryRequest {
   inquiry: string;
   manuals: Array<{ content: string }>;

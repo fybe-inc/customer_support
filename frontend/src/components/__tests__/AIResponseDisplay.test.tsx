@@ -4,12 +4,23 @@ import '@testing-library/jest-dom';
 
 describe('AIResponseDisplay', () => {
   const mockResponse = {
-    reply: 'テスト返信',
-    scenarioType: 'テストシナリオ',
-    notes: 'テスト補足'
+    scenarios: [{
+      reply: 'テスト返信',
+      scenarioType: 'テストシナリオ',
+      notes: 'テスト補足',
+      sentiment: 'positive' as const
+    }]
   };
 
   it('renders AI response when provided', () => {
+    const mockResponse = {
+      scenarios: [{
+        reply: "Test reply",
+        scenarioType: "Test type",
+        notes: "Test notes",
+        sentiment: "positive" as const
+      }]
+    };
     render(<AIResponseDisplay response={mockResponse} />);
     
     expect(screen.getByText('AI回答案')).toBeInTheDocument();
