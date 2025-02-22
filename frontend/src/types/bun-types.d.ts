@@ -19,6 +19,14 @@ declare module 'next/link' {
   export default function Link(props: LinkProps): ReactElement;
 }
 
+declare module 'react' {
+  interface FunctionComponent<P = {}> {
+    (props: P, context?: any): ReactElement | null;
+    displayName?: string;
+  }
+  interface FC<P = {}> extends FunctionComponent<P> {}
+}
+
 declare global {
   namespace JSX {
     interface IntrinsicElements {
