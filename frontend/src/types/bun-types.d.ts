@@ -3,28 +3,13 @@
 /// <reference types="next" />
 /// <reference types="@types/node" />
 
+/// <reference types="react" />
+
 declare module 'react' {
-  export type FC<P = {}> = FunctionComponent<P>;
-  
-  export type ReactNode = string | number | boolean | null | undefined | ReactElement | ReactPortal | Iterable<ReactNode>;
-  
-  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
-    type: T;
-    props: P & { children?: ReactNode };
-    key: Key | null;
-  }
-
-  export interface ReactPortal {
-    children: ReactNode;
-    containerInfo: any;
-    implementation: any;
-    key: Key | null;
-  }
-
-  export interface FunctionComponent<P = {}> {
-    (props: P, context?: any): ReactElement | null;
-    displayName?: string;
-  }
+  interface HTMLAttributes<T> extends React.HTMLAttributes<T> {}
+  interface FunctionComponent<P = {}> extends React.FunctionComponent<P> {}
+  interface FC<P = {}> extends React.FC<P> {}
+}
   
   export type Key = string | number;
   export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null);
