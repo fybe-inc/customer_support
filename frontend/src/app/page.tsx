@@ -1,11 +1,10 @@
 'use client';
 
-import Navbar from '@/components/Navbar';
 import { useState } from 'react';
 import type { FC } from 'react';
 import InquiryForm from '@/components/InquiryForm';
 import AIResponseDisplay from '@/components/AIResponseDisplay';
-import { AIResponse, ManualEntry, ProductEntry } from '@/types/types';
+import { AIResponse, ManualEntry, ProductEntry, ScenarioEntry } from '@/types/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const Home: FC = () => {
@@ -13,6 +12,7 @@ const Home: FC = () => {
 
   const [manuals] = useLocalStorage<ManualEntry[]>('manuals', []);
   const [products] = useLocalStorage<ProductEntry[]>('products', []);
+  const [scenarios] = useLocalStorage<ScenarioEntry[]>('scenarios', []);
 
 
   const handleInquirySubmit = async (inquiry: string) => {
@@ -22,7 +22,7 @@ const Home: FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ inquiry, manuals, products }),
+        body: JSON.stringify({ inquiry, manuals, products, scenarios }),
       });
 
       if (!response.ok) {
@@ -38,19 +38,14 @@ const Home: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Navbar />
-      <main className="flex-1 py-12">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mb-8">
-            AIカスタマーサポート支援システム
-          </h1>
-          <div className="flex flex-col items-center gap-8">
-            <InquiryForm onSubmit={handleInquirySubmit} />
-            <AIResponseDisplay response={aiResponse} />
-          </div>
-        </div>
-      </main>
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold text-center mb-8">
+        AIカスタマーサポート支援システム
+      </h1>
+      <div className="flex flex-col items-center gap-8">
+        <InquiryForm onSubmit={handleInquirySubmit} />
+        <AIResponseDisplay response={aiResponse} />
+      </div>
     </div>
   );
 };
