@@ -1,20 +1,47 @@
 /// <reference types="react" />
+/// <reference types="react" />
 /// <reference types="react-dom" />
 /// <reference types="next" />
 /// <reference types="@types/node" />
 
-/// <reference types="react" />
-
-declare module 'react' {
-  interface HTMLAttributes<T> extends React.HTMLAttributes<T> {}
-  interface FunctionComponent<P = {}> extends React.FunctionComponent<P> {}
-  interface FC<P = {}> extends React.FC<P> {}
+declare module 'next/link' {
+  import { ComponentProps } from 'react';
+  export interface LinkProps extends Omit<ComponentProps<'a'>, 'href'> {
+    href: string;
+    as?: string;
+    replace?: boolean;
+    scroll?: boolean;
+    shallow?: boolean;
+    passHref?: boolean;
+    prefetch?: boolean;
+    locale?: string | false;
+  }
+  export default function Link(props: LinkProps): JSX.Element;
 }
-  
-  export type Key = string | number;
-  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null);
-  
-  export interface HTMLAttributes<T> {
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      div: React.HTMLAttributes<HTMLDivElement>;
+      nav: React.HTMLAttributes<HTMLElement>;
+      ul: React.HTMLAttributes<HTMLUListElement>;
+      li: React.HTMLAttributes<HTMLLIElement>;
+      h1: React.HTMLAttributes<HTMLHeadingElement>;
+      h2: React.HTMLAttributes<HTMLHeadingElement>;
+      h3: React.HTMLAttributes<HTMLHeadingElement>;
+      h4: React.HTMLAttributes<HTMLHeadingElement>;
+      p: React.HTMLAttributes<HTMLParagraphElement>;
+      span: React.HTMLAttributes<HTMLSpanElement>;
+      main: React.HTMLAttributes<HTMLElement>;
+      form: React.HTMLAttributes<HTMLFormElement>;
+      input: React.HTMLAttributes<HTMLInputElement>;
+      textarea: React.HTMLAttributes<HTMLTextAreaElement>;
+      button: React.HTMLAttributes<HTMLButtonElement>;
+      label: React.HTMLAttributes<HTMLLabelElement>;
+      [elemName: string]: any;
+    }
+  }
+}  export interface HTMLAttributes<T> {
     className?: string;
     onClick?: (event: MouseEvent<T>) => void;
     onChange?: (event: ChangeEvent<T>) => void;
