@@ -2,6 +2,7 @@
 /// <reference types="jest" />
 import * as React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import type { RenderResult } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ScenarioManagement } from '../ScenarioManagement';
 import type { Scenario } from '../../types/types';

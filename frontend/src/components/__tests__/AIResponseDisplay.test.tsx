@@ -2,6 +2,7 @@
 /// <reference types="jest" />
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
+import type { RenderResult } from '@testing-library/react';
 import AIResponseDisplay from '../AIResponseDisplay';
 import '@testing-library/jest-dom';
 import { AIResponse } from '../../types/types';
