@@ -1,4 +1,6 @@
 /// <reference types="@testing-library/jest-dom" />
+/// <reference types="jest" />
+import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import AIResponseDisplay from '../AIResponseDisplay';
 import '@testing-library/jest-dom';

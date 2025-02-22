@@ -1,4 +1,6 @@
-import React from 'react';
+/// <reference types="@testing-library/jest-dom" />
+/// <reference types="jest" />
+import * as React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ScenarioManagement } from '../ScenarioManagement';
