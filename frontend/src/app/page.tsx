@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { FC } from "react";
 import { useRouter } from "next/navigation";
 import InquiryForm from "@/components/InquiryForm";
 import AIResponseDisplay from "@/components/AIResponseDisplay";
@@ -13,7 +12,7 @@ import {
 } from "@/hooks/useSupabaseData";
 import { supabase } from "@/lib/supabase";
 
-const Home: FC = () => {
+export default function Home() {
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const router = useRouter();
@@ -119,6 +118,4 @@ const Home: FC = () => {
       </div>
     </div>
   );
-};
-
-export default Home;
+}

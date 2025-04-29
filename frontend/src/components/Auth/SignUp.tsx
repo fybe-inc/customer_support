@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -9,7 +10,7 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  // メール確認後のリダイレクトに使用する可能性があるためコメントアウトせずに残す
+  const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,31 +19,30 @@ export default function SignUp() {
     setMessage(null);
 
     try {
-      // クライアント作成
-      const supabase = createClient();
-
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      // サインアップ成功時のメッセージ
-      setMessage("登録確認メールを送信しました。メールを確認してください。");
-      // メール確認が不要な場合は以下のようにリダイレクト
-      // router.push('/');
-      // router.refresh();
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : String(error));
+      if (data.user) {
+        setMessage(
+          "登録確認メールを送信しました。メールのリンクをクリックして登録を完了してください。",
+        );
+      }
+    } catch (error: any) {
+      setError(error.message || "登録に失敗しました");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-6">アカウント登録</h2>
+    <div>
+      <h2 className="text-2xl font-bold mb-6 text-center">アカウント登録</h2>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -53,9 +53,12 @@ export default function SignUp() {
           {message}
         </div>
       )}
-      <form onSubmit={handleSignUp} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
+      <form onSubmit={handleSignUp}>
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             メールアドレス
           </label>
           <input
@@ -63,12 +66,15 @@ export default function SignUp() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
+        <div className="mb-6">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             パスワード
           </label>
           <input
@@ -76,19 +82,19 @@ export default function SignUp() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
           <p className="text-xs text-gray-500 mt-1">
-            パスワードは6文字以上で設定してください
+            ※ パスワードは8文字以上で設定してください
           </p>
         </div>
         <button
           type="submit"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           disabled={loading}
-          className="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
         >
-          {loading ? "登録中..." : "アカウント登録"}
+          {loading ? "登録中..." : "登録する"}
         </button>
       </form>
     </div>

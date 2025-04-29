@@ -1,7 +1,8 @@
-import { createClient as createBrowserClient } from "@/utils/supabase/client";
+import { createClient } from "@supabase/supabase-js";
 
-// 後方互換性のために残す
-export const supabase = createBrowserClient();
+// 環境変数からSupabaseの設定を取得
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-// 新しい関数も提供
-export const createClient = createBrowserClient;
+// Supabaseクライアントの作成
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);

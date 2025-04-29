@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 interface LogoutButtonProps {
   className?: string;
@@ -15,11 +15,8 @@ export default function LogoutButton({ className = "" }: LogoutButtonProps) {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      // クライアント作成
-      const supabase = createClient();
-
       await supabase.auth.signOut();
-      router.push("/auth"); // ログアウト後は認証ページにリダイレクト
+      router.push("/auth");
       router.refresh();
     } catch (error) {
       console.error("ログアウトエラー:", error);
@@ -32,7 +29,7 @@ export default function LogoutButton({ className = "" }: LogoutButtonProps) {
     <button
       onClick={handleLogout}
       disabled={loading}
-      className={`px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:bg-red-300 ${className}`}
+      className={`py-2 px-4 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 ${className}`}
     >
       {loading ? "ログアウト中..." : "ログアウト"}
     </button>

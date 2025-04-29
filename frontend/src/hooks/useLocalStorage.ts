@@ -25,14 +25,15 @@ export function useLocalStorage<T>(
 
       // アイテムが存在しない場合
       if (!item) {
-
         // デフォルト値を使用するオプションが有効で、キーに対応するデフォルト値がある場合
         if (useDefaultIfEmpty) {
           const defaultValue = getDefaultValueForKey(key);
           if (defaultValue !== undefined) {
             // デフォルト値をLocalStorageに保存
             localStorage.setItem(key, JSON.stringify(defaultValue));
-            window.alert("登録ありがとうございます．事前設定されたテストデータがございますので，参考にしてください．削除してからご利用ください．")
+            window.alert(
+              "登録ありがとうございます．事前設定されたテストデータがございますので，参考にしてください．削除してからご利用ください．",
+            );
             return defaultValue as unknown as T;
           }
         }
