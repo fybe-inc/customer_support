@@ -30,8 +30,10 @@ export default function Login() {
         router.push("/");
         router.refresh();
       }
-    } catch (error: any) {
-      setError(error.message || "ログインに失敗しました");
+    } catch (error: unknown) {
+      setError(
+        error instanceof Error ? error.message : "ログインに失敗しました"
+      );
     } finally {
       setLoading(false);
     }

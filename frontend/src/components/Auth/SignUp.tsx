@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
@@ -10,7 +9,6 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +31,10 @@ export default function SignUp() {
           "登録確認メールを送信しました。メールのリンクをクリックして登録を完了してください。",
         );
       }
-    } catch (error: any) {
-      setError(error.message || "登録に失敗しました");
+    } catch (error: unknown) {
+      setError(
+        error instanceof Error ? error.message : "登録に失敗しました"
+      );
     } finally {
       setLoading(false);
     }
