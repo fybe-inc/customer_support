@@ -1,37 +1,39 @@
-'use client';
+"use client";
 
-import type { FC, FormEvent as ReactFormEvent } from 'react';
-import { useState } from 'react';
-import type { Scenario } from '../types/types';
+import type { FC, FormEvent as ReactFormEvent } from "react";
+import { useState } from "react";
+import type { Scenario } from "../types/types";
 
 interface ScenarioManagementProps {
   onScenarioSelect: (scenario: Scenario | null) => void;
   selectedScenario: Scenario | null;
   scenarios: Scenario[];
-  setScenarios: (scenarios: Scenario[] | ((prev: Scenario[]) => Scenario[])) => void;
+  setScenarios: (
+    scenarios: Scenario[] | ((prev: Scenario[]) => Scenario[]),
+  ) => void;
 }
 
 export const ScenarioManagement: FC<ScenarioManagementProps> = ({
   onScenarioSelect,
   selectedScenario,
   scenarios,
-  setScenarios
+  setScenarios,
 }) => {
-  const addScenario = (newScenario: Omit<Scenario, 'id'>) => {
+  const addScenario = (newScenario: Omit<Scenario, "id">) => {
     const scenario: Scenario = {
       ...newScenario,
-      id: `custom-${Date.now()}`
+      id: `custom-${Date.now()}`,
     };
-    setScenarios(prev => [...prev, scenario]);
+    setScenarios((prev) => [...prev, scenario]);
   };
 
   const deleteScenario = (id: string) => {
-    setScenarios(prev => prev.filter(scenario => scenario.id !== id));
+    setScenarios((prev) => prev.filter((scenario) => scenario.id !== id));
   };
 
-  const [newScenario, setNewScenario] = useState<Omit<Scenario, 'id'>>({
-    prompt: '',
-    title: ''
+  const [newScenario, setNewScenario] = useState<Omit<Scenario, "id">>({
+    prompt: "",
+    title: "",
   });
 
   const handleSubmit = (e: ReactFormEvent<HTMLFormElement>) => {
@@ -39,8 +41,8 @@ export const ScenarioManagement: FC<ScenarioManagementProps> = ({
     if (newScenario.prompt && newScenario.title) {
       addScenario(newScenario);
       setNewScenario({
-        prompt: '',
-        title: ''
+        prompt: "",
+        title: "",
       });
     }
   };
@@ -68,10 +70,12 @@ export const ScenarioManagement: FC<ScenarioManagementProps> = ({
             id="title"
             type="text"
             value={newScenario.title}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewScenario({
-              ...newScenario,
-              title: e.target.value
-            })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewScenario({
+                ...newScenario,
+                title: e.target.value,
+              })
+            }
             className="w-full p-4 border rounded-lg"
             required
           />
@@ -83,10 +87,12 @@ export const ScenarioManagement: FC<ScenarioManagementProps> = ({
           <textarea
             id="prompt"
             value={newScenario.prompt}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewScenario({
-              ...newScenario,
-              prompt: e.target.value
-            })}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setNewScenario({
+                ...newScenario,
+                prompt: e.target.value,
+              })
+            }
             className="w-full h-32 p-4 border rounded-lg resize-none"
             required
           />
@@ -100,12 +106,18 @@ export const ScenarioManagement: FC<ScenarioManagementProps> = ({
       </form>
       <div className="space-y-4">
         {scenarios.map((scenario) => (
-          <div 
-            key={scenario.id} 
+          <div
+            key={scenario.id}
             className={`p-4 border rounded-lg bg-white cursor-pointer ${
-              selectedScenario?.id === scenario.id ? 'border-blue-500 bg-blue-50' : ''
+              selectedScenario?.id === scenario.id
+                ? "border-blue-500 bg-blue-50"
+                : ""
             }`}
-            onClick={() => onScenarioSelect(selectedScenario?.id === scenario.id ? null : scenario)}
+            onClick={() =>
+              onScenarioSelect(
+                selectedScenario?.id === scenario.id ? null : scenario,
+              )
+            }
           >
             <div className="flex justify-between items-start">
               <div>

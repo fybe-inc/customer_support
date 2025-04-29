@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import LocalStorageInitializer from "@/components/LocalStorageInitializer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,10 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <div className="flex min-h-screen bg-gray-50">
           <Navbar />
-          <main className="flex-1 ml-64">{children}</main>
+          <main className="flex-1 ml-64">
+            {/* LocalStorageの初期化コンポーネント */}
+            <LocalStorageInitializer />
+            {children}
+          </main>
         </div>
       </body>
     </html>

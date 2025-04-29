@@ -2,7 +2,7 @@ export interface AIScenario {
   reply: string;
   scenarioType: string;
   notes: string;
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: "positive" | "negative" | "neutral";
 }
 
 export interface AIResponse {
@@ -36,7 +36,7 @@ export interface ProductEntry {
 
 export interface Scenario {
   id: string;
-  title: string;  // descriptionからtitleに変更
+  title: string; // descriptionからtitleに変更
   prompt: string;
 }
 

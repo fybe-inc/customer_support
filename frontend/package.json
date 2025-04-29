@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "next dev",
+    "dev": "prettier --write . && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -8,7 +8,19 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "@types/testing-library__react": "^10.2.0",
-    "bun-types": "^1.2.3"
+    "bun-types": "^1.2.3",
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.4",
+    "next": "^15.3.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   }
 }

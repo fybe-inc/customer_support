@@ -1,7 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { ScenarioManagement } from '../ScenarioManagement';
+import React from "react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { ScenarioManagement } from "../ScenarioManagement";
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -13,92 +13,92 @@ const localStorageMock = (() => {
     },
     clear: () => {
       store = {};
-    }
+    },
   };
 })();
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+Object.defineProperty(window, "localStorage", {
+  value: localStorageMock,
 });
 
-describe('ScenarioManagement', () => {
+describe("ScenarioManagement", () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
-  it('renders default scenarios', () => {
+  it("renders default scenarios", () => {
     const scenarios: Array<{
       id: string;
       description: string;
       prompt: string;
     }> = [];
     render(
-      <ScenarioManagement 
-        onScenarioSelect={() => {}} 
+      <ScenarioManagement
+        onScenarioSelect={() => {}}
         selectedScenario={null}
         scenarios={scenarios}
         setScenarios={() => {}}
-      />
+      />,
     );
-    
-    expect(screen.getByText('肯定的な返信テンプレート')).toBeInTheDocument();
-    expect(screen.getByText('否定的な返信テンプレート')).toBeInTheDocument();
-    expect(screen.getByText('日程調整テンプレート')).toBeInTheDocument();
+
+    expect(screen.getByText("肯定的な返信テンプレート")).toBeInTheDocument();
+    expect(screen.getByText("否定的な返信テンプレート")).toBeInTheDocument();
+    expect(screen.getByText("日程調整テンプレート")).toBeInTheDocument();
   });
 
-  it('allows adding new scenarios', async () => {
+  it("allows adding new scenarios", async () => {
     const scenarios: Array<{
       id: string;
       description: string;
       prompt: string;
     }> = [];
     render(
-      <ScenarioManagement 
-        onScenarioSelect={() => {}} 
+      <ScenarioManagement
+        onScenarioSelect={() => {}}
         selectedScenario={null}
         scenarios={scenarios}
         setScenarios={() => {}}
-      />
+      />,
     );
-    
-    const description = 'テストシナリオ';
-    const prompt = 'テストプロンプト';
 
-    fireEvent.change(screen.getByLabelText('説明'), {
-      target: { value: description }
+    const description = "テストシナリオ";
+    const prompt = "テストプロンプト";
+
+    fireEvent.change(screen.getByLabelText("説明"), {
+      target: { value: description },
     });
-    fireEvent.change(screen.getByLabelText('プロンプト'), {
-      target: { value: prompt }
+    fireEvent.change(screen.getByLabelText("プロンプト"), {
+      target: { value: prompt },
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByText('追加'));
+      fireEvent.click(screen.getByText("追加"));
     });
 
     expect(screen.getByText(description)).toBeInTheDocument();
     expect(screen.getByText(prompt)).toBeInTheDocument();
   });
 
-  it('allows deleting custom scenarios but not default ones', () => {
+  it("allows deleting custom scenarios but not default ones", () => {
     const scenarios: Array<{
       id: string;
       description: string;
       prompt: string;
     }> = [];
     render(
-      <ScenarioManagement 
-        onScenarioSelect={() => {}} 
+      <ScenarioManagement
+        onScenarioSelect={() => {}}
         selectedScenario={null}
         scenarios={scenarios}
         setScenarios={() => {}}
-      />
+      />,
     );
-    
+
     // Default scenarios should not have delete buttons
     const defaultScenarios = screen.getAllByText(/テンプレート$/);
-    defaultScenarios.forEach(scenario => {
-      const scenarioContainer = scenario.closest('div');
-      expect(scenarioContainer).not.toHaveTextContent('削除');
+    defaultScenarios.forEach((scenario) => {
+      const scenarioContainer = scenario.closest("div");
+      expect(scenarioContainer).not.toHaveTextContent("削除");
     });
   });
 });

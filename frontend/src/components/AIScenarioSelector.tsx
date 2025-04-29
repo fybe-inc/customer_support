@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { AIScenario } from '../types/types';
+import React from "react";
+import { AIScenario } from "../types/types";
 
 interface AIScenarioSelectorProps {
   scenarios: AIScenario[];
@@ -27,11 +27,15 @@ export const AIScenarioSelector: React.FC<AIScenarioSelectorProps> = ({
               <p className="text-sm text-gray-600 mt-2">{scenario.reply}</p>
               <p className="text-xs text-gray-500 mt-1">{scenario.notes}</p>
             </div>
-            <span className={`text-sm ${
-              scenario.sentiment === 'positive' ? 'text-green-600' :
-              scenario.sentiment === 'negative' ? 'text-red-600' :
-              'text-gray-600'
-            }`}>
+            <span
+              className={`text-sm ${
+                scenario.sentiment === "positive"
+                  ? "text-green-600"
+                  : scenario.sentiment === "negative"
+                    ? "text-red-600"
+                    : "text-gray-600"
+              }`}
+            >
               {scenario.sentiment}
             </span>
           </div>

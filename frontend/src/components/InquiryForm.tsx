@@ -1,14 +1,13 @@
-'use client';
-import type { FormEvent } from 'react';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface InquiryFormProps {
   onSubmit: (inquiry: string) => Promise<void>;
 }
 
 export default function InquiryForm({ onSubmit }: InquiryFormProps) {
-  const [inquiry, setInquiry] = useState('');
+  const [inquiry, setInquiry] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -18,7 +17,7 @@ export default function InquiryForm({ onSubmit }: InquiryFormProps) {
     setIsLoading(true);
     try {
       await onSubmit(inquiry);
-      setInquiry('');
+      setInquiry("");
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +38,7 @@ export default function InquiryForm({ onSubmit }: InquiryFormProps) {
           disabled={isLoading || !inquiry.trim()}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
         >
-          {isLoading ? '送信中...' : 'AI回答を取得'}
+          {isLoading ? "送信中..." : "AI回答を取得"}
         </button>
       </div>
     </form>

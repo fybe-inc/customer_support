@@ -1,34 +1,43 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference types="react" />
 /// <reference types="react-dom" />
 /// <reference types="next" />
 /// <reference types="@types/node" />
+/* eslint-enable @typescript-eslint/triple-slash-reference */
 
-declare module 'react' {
-  export type FC<P = {}> = FunctionComponent<P>;
-  
+declare module "react" {
+  export type FC<P = Record<string, unknown>> = FunctionComponent<P>;
+
   export interface ReactPortal {
     children?: React.ReactNode;
-    containerInfo: any;
-    implementation: any;
+    containerInfo: unknown;
+    implementation: unknown;
     key: Key | null;
   }
 
   export type ReactNode = React.ReactNode;
-  
-  export interface FunctionComponent<P = {}> {
-    (props: P, context?: any): React.ReactNode | Promise<React.ReactNode>;
+
+  export interface FunctionComponent<P = Record<string, unknown>> {
+    (props: P, context?: unknown): React.ReactNode | Promise<React.ReactNode>;
     displayName?: string;
   }
-  
-  export interface ReactElement<P = any, T extends string | JSXElementConstructor<any> = string | JSXElementConstructor<any>> {
+
+  export interface ReactElement<
+    P = unknown,
+    T extends string | JSXElementConstructor<unknown> =
+      | string
+      | JSXElementConstructor<unknown>,
+  > {
     type: T;
     props: P;
     key: Key | null;
   }
-  
+
   export type Key = string | number;
-  export type JSXElementConstructor<P> = ((props: P) => ReactElement<any, any> | null);
-  
+  export type JSXElementConstructor<P> = (
+    props: P,
+  ) => ReactElement<unknown, unknown> | null;
+
   export interface HTMLAttributes<T> {
     className?: string;
     onClick?: (event: MouseEvent<T>) => void;
@@ -40,12 +49,12 @@ declare module 'react' {
     rows?: number;
     placeholder?: string;
     disabled?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   export type FormEvent<T = Element> = React.FormEvent<T>;
   export type FormEventHandler<T = Element> = React.FormEventHandler<T>;
-  
+
   export interface HTMLFormElement extends HTMLElement {
     acceptCharset: string;
     action: string;
@@ -64,7 +73,7 @@ declare module 'react' {
     reportValidity(): boolean;
     requestSubmit(submitter?: HTMLElement): void;
   }
-  
+
   export interface HTMLFormControlsCollection {
     [index: number]: Element;
     length: number;
@@ -82,9 +91,17 @@ declare module 'react' {
   }
 
   // React Hooks
-  export function useState<T>(initialState: T | (() => T)): [T, (newState: T | ((prevState: T) => T)) => void];
-  export function useEffect(effect: () => void | (() => void), deps?: readonly any[]): void;
-  export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: readonly any[]): T;
+  export function useState<T>(
+    initialState: T | (() => T),
+  ): [T, (newState: T | ((prevState: T) => T)) => void];
+  export function useEffect(
+    effect: () => void | (() => void),
+    deps?: readonly unknown[],
+  ): void;
+  export function useCallback<T extends (...args: unknown[]) => unknown>(
+    callback: T,
+    deps: readonly unknown[],
+  ): T;
 }
 
 declare global {
@@ -116,14 +133,14 @@ declare global {
       section: React.HTMLAttributes<HTMLElement>;
       article: React.HTMLAttributes<HTMLElement>;
       aside: React.HTMLAttributes<HTMLElement>;
-      [elemName: string]: any;
+      [elemName: string]: unknown;
     }
   }
 }
 
-declare module 'next/link' {
-  import { ReactElement, ComponentProps } from 'react';
-  export interface LinkProps extends Omit<ComponentProps<'a'>, 'href'> {
+declare module "next/link" {
+  import { ComponentProps } from "react";
+  export interface LinkProps extends Omit<ComponentProps<"a">, "href"> {
     href: string;
     as?: string;
     replace?: boolean;
@@ -137,26 +154,4 @@ declare module 'next/link' {
   export default function Link(props: LinkProps): React.ReactNode;
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      div: React.HTMLAttributes<HTMLDivElement>;
-      nav: React.HTMLAttributes<HTMLElement>;
-      ul: React.HTMLAttributes<HTMLUListElement>;
-      li: React.HTMLAttributes<HTMLLIElement>;
-      h1: React.HTMLAttributes<HTMLHeadingElement>;
-      h2: React.HTMLAttributes<HTMLHeadingElement>;
-      h3: React.HTMLAttributes<HTMLHeadingElement>;
-      h4: React.HTMLAttributes<HTMLHeadingElement>;
-      p: React.HTMLAttributes<HTMLParagraphElement>;
-      span: React.HTMLAttributes<HTMLSpanElement>;
-      main: React.HTMLAttributes<HTMLElement>;
-      form: React.HTMLAttributes<HTMLFormElement>;
-      input: React.HTMLAttributes<HTMLInputElement>;
-      textarea: React.HTMLAttributes<HTMLTextAreaElement>;
-      button: React.HTMLAttributes<HTMLButtonElement>;
-      label: React.HTMLAttributes<HTMLLabelElement>;
-      [elemName: string]: any;
-    }
-  }
-}
+// 重複した宣言を削除
