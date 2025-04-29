@@ -31,9 +31,6 @@ export function useLocalStorage<T>(
           if (defaultValue !== undefined) {
             // デフォルト値をLocalStorageに保存
             localStorage.setItem(key, JSON.stringify(defaultValue));
-            window.alert(
-              "登録ありがとうございます．事前設定されたテストデータがございますので，参考にしてください．削除してからご利用ください．",
-            );
             return defaultValue as unknown as T;
           }
         }
