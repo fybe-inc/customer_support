@@ -1,47 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSupabaseManuals } from "@/hooks/useSupabaseData";
-import { supabase } from "@/lib/supabase";
+import React, { useState } from "react";
+import { useApiManuals } from "@/hooks/useApiData";
 
 export default function ManualPage() {
-  const { manuals, loading, error, addManual, deleteManual } =
-    useSupabaseManuals();
+  const { manuals, loading, error, addManual, deleteManual } = useApiManuals();
   const [content, setContent] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const router = useRouter();
-
-  // 認証状態を確認
-  useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-
-      // 認証されていない場合は認証ページにリダイレクト
-      if (!session) {
-        router.push("/auth");
-      }
-    };
-
-    checkAuth();
-
-    // 認証状態の変更を監視
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-      if (!session) {
-        router.push("/auth");
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,18 +25,6 @@ export default function ManualPage() {
       alert("マニュアルの削除に失敗しました。");
     }
   };
-
-  // 認証状態の確認中はローディング表示
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4">読み込み中...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -99,7 +51,7 @@ export default function ManualPage() {
         </button>
       </form>
       <div className="space-y-4">
-        {loading ? (
+        {loading && manuals.length === 0 ? (
           <div className="text-center py-4">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
             <p className="mt-2">読み込み中...</p>
@@ -113,11 +65,14 @@ export default function ManualPage() {
             <div key={manual.id} className="p-4 border rounded-lg bg-white">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-sm text-gray-500">
-                  {new Date(manual.timestamp).toLocaleString("ja-JP")}
+                  {manual.created_at
+                    ? new Date(manual.created_at).toLocaleString("ja-JP")
+                    : "日時不明"}
                 </span>
                 <button
                   onClick={() => handleDelete(manual.id)}
                   className="text-red-500 hover:text-red-700"
+                  disabled={loading}
                 >
                   削除
                 </button>

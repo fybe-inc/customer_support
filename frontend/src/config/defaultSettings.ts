@@ -6,12 +6,10 @@ export const defaultManuals: ManualEntry[] = [
     id: "default-manual-1",
     content:
       "署名として,合同会社FYBE.jp カスタマーサポート担当：内藤剛汰をメッセージの末尾に追加してください。",
-    timestamp: 1714500000000,
   },
   {
     id: "default-manual-2",
     content: "ユーザーへカジュアルに答えてください。",
-    timestamp: 1714500100000,
   },
 ];
 
@@ -36,7 +34,6 @@ export const defaultProducts: ProductEntry[] = [
   "商品ページURL": "https://www.ankerjapan.com/products/a1268"
 }
 `,
-    timestamp: 1714500200000,
   },
   {
     id: "default-product-2",
@@ -57,7 +54,6 @@ export const defaultProducts: ProductEntry[] = [
   "商品ページURL": "https://www.ankerjapan.com/products/a1611"
 }
 `,
-    timestamp: 1714500300000,
   },
 ];
 

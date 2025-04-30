@@ -2,36 +2,47 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
-import { User } from "@supabase/supabase-js";
+import { createClient } from "@/utils/supabase/client";
 import LogoutButton from "./Auth/LogoutButton";
+import DebugFetch from "./debugFetch";
+import { User } from "@supabase/supabase-js";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 現在のセッションを取得
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
+    const supabase = createClient();
 
-      // 認証状態の変更を監視
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        setUser(session?.user ?? null);
-      });
-
-      return () => {
-        subscription.unsubscribe();
-      };
+    // 初期ユーザー情報の取得
+    const fetchUser = async () => {
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user);
+      } catch (error) {
+        console.error("ユーザー情報の取得に失敗しました:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    getSession();
+    fetchUser();
+
+    // 認証状態の変更を監視
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN") {
+        setUser(session?.user || null);
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
+    });
+
+    // クリーンアップ関数
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
@@ -77,12 +88,14 @@ const Navbar = () => {
         {/* 認証状態に応じた表示 */}
         <div className="mb-6">
           {loading ? (
-            <div className="text-sm text-gray-500">読み込み中...</div>
+            <div className="text-sm text-gray-500 mb-2">読み込み中...</div>
           ) : user ? (
             <div>
-              <div className="text-sm text-gray-500 mb-2">
-                ログイン中: {user.email}
-              </div>
+              <DebugFetch>
+                <div className="text-sm text-gray-500 mb-2">
+                  ログイン中: {user.email}
+                </div>
+              </DebugFetch>
               <LogoutButton className="w-full" />
             </div>
           ) : (

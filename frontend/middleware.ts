@@ -35,13 +35,22 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // 認証が必要なページへのアクセスをチェック
-  const protectedPaths = ["/manual", "/products", "/scenarios"];
+  const protectedPaths = ["/manual", "/products", "/scenarios", "/api"];
   const isProtectedPath = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path),
   );
 
   // 認証されていないユーザーが保護されたページにアクセスしようとした場合
   if (!user && isProtectedPath) {
+    // APIリクエストの場合は401エラーを返す
+    if (request.nextUrl.pathname.startsWith("/api")) {
+      return new NextResponse(JSON.stringify({ error: "認証が必要です" }), {
+        status: 401,
+        headers: { "content-type": "application/json" },
+      });
+    }
+
+    // 通常のページアクセスの場合はリダイレクト
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/auth";
     return NextResponse.redirect(redirectUrl);

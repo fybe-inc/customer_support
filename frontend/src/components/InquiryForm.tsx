@@ -4,22 +4,32 @@ import { useState } from "react";
 
 interface InquiryFormProps {
   onSubmit: (inquiry: string) => Promise<void>;
+  isLoading?: boolean; // 外部からローディング状態を受け取れるようにする
 }
 
-export default function InquiryForm({ onSubmit }: InquiryFormProps) {
+export default function InquiryForm({ onSubmit, isLoading: externalLoading }: InquiryFormProps) {
   const [inquiry, setInquiry] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [internalLoading, setInternalLoading] = useState(false);
+  
+  // 外部から渡されたローディング状態があればそれを優先、なければ内部の状態を使用
+  const isLoading = externalLoading !== undefined ? externalLoading : internalLoading;
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (!inquiry.trim()) return;
 
-    setIsLoading(true);
+    // 外部でローディング状態が管理されていない場合のみ、内部で管理
+    if (externalLoading === undefined) {
+      setInternalLoading(true);
+    }
+    
     try {
       await onSubmit(inquiry);
       setInquiry("");
     } finally {
-      setIsLoading(false);
+      if (externalLoading === undefined) {
+        setInternalLoading(false);
+      }
     }
   };
 

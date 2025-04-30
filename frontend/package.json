@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "dev": "prettier --write . && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write .",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

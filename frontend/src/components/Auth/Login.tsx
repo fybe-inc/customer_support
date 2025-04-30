@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,6 +17,7 @@ export default function Login() {
     setError(null);
 
     try {
+      const supabase = createClient();
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -32,7 +33,7 @@ export default function Login() {
       }
     } catch (error: unknown) {
       setError(
-        error instanceof Error ? error.message : "ログインに失敗しました"
+        error instanceof Error ? error.message : "ログインに失敗しました",
       );
     } finally {
       setLoading(false);

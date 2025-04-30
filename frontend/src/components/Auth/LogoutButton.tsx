@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 interface LogoutButtonProps {
   className?: string;
@@ -11,6 +11,7 @@ interface LogoutButtonProps {
 export default function LogoutButton({ className = "" }: LogoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const supabase = createClient();
 
   const handleLogout = async () => {
     setLoading(true);

@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import Login from "@/components/Auth/Login";
 import SignUp from "@/components/Auth/SignUp";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AuthPage() {
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const supabase = createClient();
 
   // ユーザーが既にログインしている場合はホームページにリダイレクト
   useEffect(() => {

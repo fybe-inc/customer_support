@@ -25,13 +25,15 @@ export interface InquiryRequest {
 export interface ManualEntry {
   id: string;
   content: string;
-  timestamp: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ProductEntry {
   id: string;
   content: string;
-  timestamp: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Scenario {

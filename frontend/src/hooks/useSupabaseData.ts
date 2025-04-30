@@ -3,18 +3,10 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import type { ManualEntry, ProductEntry, Scenario } from "@/types/types";
-import { useLocalStorage } from "./useLocalStorage";
-import { STORAGE_KEYS } from "@/config/defaultSettings";
 
 // マニュアルデータを取得するフック
 export function useSupabaseManuals() {
-  // LocalStorageからマニュアルデータを取得（デフォルト値を使用）
-  const [manuals, setManualsInStorage] = useLocalStorage<ManualEntry[]>(
-    STORAGE_KEYS.MANUALS,
-    [],
-    { useDefaultIfEmpty: true },
-  );
-
+  const [manuals, setManuals] = useState<ManualEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,20 +24,29 @@ export function useSupabaseManuals() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          // 認証されていない場合は何もしない
+          // 認証されていない場合は空の配列を返す
+          setManuals([]);
           return;
         }
 
-        // 将来的にSupabaseからデータを取得する場合は、ここに実装
+        // Supabaseからデータを取得
+        const { data, error } = await supabase
+          .from("manuals")
+          .select("*")
+          .eq("user_id", user.id);
 
-        // 実際のSupabaseからのデータ取得は以下のようになります
-        // const { data, error } = await supabase
-        //   .from('manuals')
-        //   .select('*')
-        //   .eq('user_id', user.id);
-        //
-        // if (error) throw error;
-        // setManuals(data || []);
+        if (error) throw error;
+
+        // データをManualEntry形式に変換
+        const formattedData: ManualEntry[] = data.map((item) => ({
+          id: item.id,
+          content: item.content,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        }));
+
+        // ステートを更新
+        setManuals(formattedData);
       } catch (error: unknown) {
         console.error("マニュアルデータの取得エラー:", error);
         setError(error instanceof Error ? error.message : String(error));
@@ -72,36 +73,27 @@ export function useSupabaseManuals() {
         throw new Error("認証されていません");
       }
 
+      // Supabaseに保存
+      const { data, error } = await supabase
+        .from("manuals")
+        .insert({
+          user_id: user.id,
+          content,
+        })
+        .select();
+
+      if (error) throw error;
+
+      // 新しいデータをManualEntry形式に変換
       const newEntry: ManualEntry = {
-        id: Date.now().toString(),
+        id: data[0].id,
         content,
-        timestamp: Date.now(),
+        created_at: data[0].created_at,
+        updated_at: data[0].updated_at,
       };
 
-      // LocalStorageに保存
-      const updatedManuals = [...manuals, newEntry];
-      setManualsInStorage(updatedManuals);
-
-      // 実際のSupabaseへの保存は以下のようになります
-      // const { data, error } = await supabase
-      //   .from('manuals')
-      //   .insert({
-      //     user_id: user.id,
-      //     content,
-      //     created_at: new Date().toISOString(),
-      //   })
-      //   .select();
-      //
-      // if (error) throw error;
-      //
-      // // 新しいデータを取得して状態を更新
-      // const { data: newData, error: fetchError } = await supabase
-      //   .from('manuals')
-      //   .select('*')
-      //   .eq('user_id', user.id);
-      //
-      // if (fetchError) throw fetchError;
-      // setManuals(newData || []);
+      // ステートを更新
+      setManuals((prev) => [...prev, newEntry]);
 
       return true;
     } catch (error: unknown) {
@@ -126,27 +118,17 @@ export function useSupabaseManuals() {
         throw new Error("認証されていません");
       }
 
-      // LocalStorageから削除
-      const updatedManuals = manuals.filter((manual) => manual.id !== id);
-      setManualsInStorage(updatedManuals);
+      // Supabaseから削除
+      const { error } = await supabase
+        .from("manuals")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id);
 
-      // 実際のSupabaseからの削除は以下のようになります
-      // const { error } = await supabase
-      //   .from('manuals')
-      //   .delete()
-      //   .eq('id', id)
-      //   .eq('user_id', user.id);
-      //
-      // if (error) throw error;
-      //
-      // // 削除後のデータを取得して状態を更新
-      // const { data: newData, error: fetchError } = await supabase
-      //   .from('manuals')
-      //   .select('*')
-      //   .eq('user_id', user.id);
-      //
-      // if (fetchError) throw fetchError;
-      // setManuals(newData || []);
+      if (error) throw error;
+
+      // ステートを更新
+      setManuals((prev) => prev.filter((manual) => manual.id !== id));
 
       return true;
     } catch (error: unknown) {
@@ -161,13 +143,7 @@ export function useSupabaseManuals() {
 
 // 商品データを取得するフック
 export function useSupabaseProducts() {
-  // LocalStorageから商品データを取得（デフォルト値を使用）
-  const [products, setProductsInStorage] = useLocalStorage<ProductEntry[]>(
-    STORAGE_KEYS.PRODUCTS,
-    [],
-    { useDefaultIfEmpty: true },
-  );
-
+  const [products, setProducts] = useState<ProductEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -185,20 +161,29 @@ export function useSupabaseProducts() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          // 認証されていない場合は何もしない
+          // 認証されていない場合は空の配列を返す
+          setProducts([]);
           return;
         }
 
-        // 将来的にSupabaseからデータを取得する場合は、ここに実装
+        // Supabaseからデータを取得
+        const { data, error } = await supabase
+          .from("products")
+          .select("*")
+          .eq("user_id", user.id);
 
-        // 実際のSupabaseからのデータ取得は以下のようになります
-        // const { data, error } = await supabase
-        //   .from('products')
-        //   .select('*')
-        //   .eq('user_id', user.id);
-        //
-        // if (error) throw error;
-        // setProducts(data || []);
+        if (error) throw error;
+
+        // データをProductEntry形式に変換
+        const formattedData: ProductEntry[] = data.map((item) => ({
+          id: item.id,
+          content: item.content,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        }));
+
+        // ステートを更新
+        setProducts(formattedData);
       } catch (error: unknown) {
         console.error("商品データの取得エラー:", error);
         setError(error instanceof Error ? error.message : String(error));
@@ -225,15 +210,27 @@ export function useSupabaseProducts() {
         throw new Error("認証されていません");
       }
 
+      // Supabaseに保存
+      const { data, error } = await supabase
+        .from("products")
+        .insert({
+          user_id: user.id,
+          content,
+        })
+        .select();
+
+      if (error) throw error;
+
+      // 新しいデータをProductEntry形式に変換
       const newEntry: ProductEntry = {
-        id: Date.now().toString(),
+        id: data[0].id,
         content,
-        timestamp: Date.now(),
+        created_at: data[0].created_at,
+        updated_at: data[0].updated_at,
       };
 
-      // LocalStorageに保存
-      const updatedProducts = [...products, newEntry];
-      setProductsInStorage(updatedProducts);
+      // ステートを更新
+      setProducts((prev) => [...prev, newEntry]);
 
       return true;
     } catch (error: unknown) {
@@ -258,9 +255,17 @@ export function useSupabaseProducts() {
         throw new Error("認証されていません");
       }
 
-      // LocalStorageから削除
-      const updatedProducts = products.filter((product) => product.id !== id);
-      setProductsInStorage(updatedProducts);
+      // Supabaseから削除
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      // ステートを更新
+      setProducts((prev) => prev.filter((product) => product.id !== id));
 
       return true;
     } catch (error: unknown) {
@@ -275,13 +280,7 @@ export function useSupabaseProducts() {
 
 // シナリオデータを取得するフック
 export function useSupabaseScenarios() {
-  // LocalStorageからシナリオデータを取得（デフォルト値を使用）
-  const [scenarios, setScenariosInStorage] = useLocalStorage<Scenario[]>(
-    STORAGE_KEYS.SCENARIOS,
-    [],
-    { useDefaultIfEmpty: true },
-  );
-
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -299,20 +298,28 @@ export function useSupabaseScenarios() {
         } = await supabase.auth.getUser();
 
         if (!user) {
-          // 認証されていない場合は何もしない
+          // 認証されていない場合は空の配列を返す
+          setScenarios([]);
           return;
         }
 
-        // 将来的にSupabaseからデータを取得する場合は、ここに実装
+        // Supabaseからデータを取得
+        const { data, error } = await supabase
+          .from("scenarios")
+          .select("*")
+          .eq("user_id", user.id);
 
-        // 実際のSupabaseからのデータ取得は以下のようになります
-        // const { data, error } = await supabase
-        //   .from('scenarios')
-        //   .select('*')
-        //   .eq('user_id', user.id);
-        //
-        // if (error) throw error;
-        // setScenarios(data || []);
+        if (error) throw error;
+
+        // データをScenario形式に変換
+        const formattedData: Scenario[] = data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          prompt: item.prompt,
+        }));
+
+        // ステートを更新
+        setScenarios(formattedData);
       } catch (error: unknown) {
         console.error("シナリオデータの取得エラー:", error);
         setError(error instanceof Error ? error.message : String(error));
@@ -339,15 +346,27 @@ export function useSupabaseScenarios() {
         throw new Error("認証されていません");
       }
 
+      // Supabaseに保存
+      const { data, error } = await supabase
+        .from("scenarios")
+        .insert({
+          user_id: user.id,
+          title,
+          prompt,
+        })
+        .select();
+
+      if (error) throw error;
+
+      // 新しいデータをScenario形式に変換
       const newScenario: Scenario = {
-        id: Date.now().toString(),
+        id: data[0].id,
         title,
         prompt,
       };
 
-      // LocalStorageに保存
-      const updatedScenarios = [...scenarios, newScenario];
-      setScenariosInStorage(updatedScenarios);
+      // ステートを更新
+      setScenarios((prev) => [...prev, newScenario]);
 
       return true;
     } catch (error: unknown) {
@@ -372,11 +391,17 @@ export function useSupabaseScenarios() {
         throw new Error("認証されていません");
       }
 
-      // LocalStorageから削除
-      const updatedScenarios = scenarios.filter(
-        (scenario) => scenario.id !== id,
-      );
-      setScenariosInStorage(updatedScenarios);
+      // Supabaseから削除
+      const { error } = await supabase
+        .from("scenarios")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      // ステートを更新
+      setScenarios((prev) => prev.filter((scenario) => scenario.id !== id));
 
       return true;
     } catch (error: unknown) {

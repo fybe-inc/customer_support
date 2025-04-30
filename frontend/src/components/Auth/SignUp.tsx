@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -17,6 +17,7 @@ export default function SignUp() {
     setMessage(null);
 
     try {
+      const supabase = createClient();
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -32,9 +33,7 @@ export default function SignUp() {
         );
       }
     } catch (error: unknown) {
-      setError(
-        error instanceof Error ? error.message : "登録に失敗しました"
-      );
+      setError(error instanceof Error ? error.message : "登録に失敗しました");
     } finally {
       setLoading(false);
     }
