@@ -1,72 +1,54 @@
+// src/middleware.ts
 import { type NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+import { createMiddlewareSupabaseClient } from "@/utils/supabase/server";
 
-// 環境変数のチェック
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL環境変数が設定されていません");
-}
+// 認証必須パス（トップは完全一致／それ以外は prefix で判定）
+const protectedPagePaths = ["/", "/manual", "/products", "/scenarios"];
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY環境変数が設定されていません");
-}
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export const config = {
+  matcher: [
+    "/",                      // トップページ
+    "/manual/:path*",         // /manual とその下位
+    "/products/:path*",       // /products とその下位
+    "/scenarios/:path*",      // /scenarios とその下位
+    "/api/:path*",            // API 全般
+  ],
+};
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
+  const supabase = createMiddlewareSupabaseClient(request, response);
 
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookies) {
-        cookies.forEach(({ name, value, options }) =>
-          response.cookies.set({ name, value, ...options }),
-        );
-      },
-    },
-  });
-
-  // ユーザー情報を取得（トークンを再検証）
+  // セッション確認
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 認証が必要なページへのアクセスをチェック
-  const protectedPaths = ["/manual", "/products", "/scenarios", "/api"];
-  const isProtectedPath = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path),
+  const { pathname } = request.nextUrl;
+  const isApiPath = pathname.startsWith("/api");
+  const isProtected = protectedPagePaths.some((p) =>
+    p === "/" ? pathname === "/" : pathname.startsWith(p)
   );
 
-  // 認証されていないユーザーが保護されたページにアクセスしようとした場合
-  if (!user && isProtectedPath) {
-    // APIリクエストの場合は401エラーを返す
-    if (request.nextUrl.pathname.startsWith("/api")) {
-      return new NextResponse(JSON.stringify({ error: "認証が必要です" }), {
-        status: 401,
-        headers: { "content-type": "application/json" },
-      });
+  // 未ログインかつ保護ページ or API なら
+  if (!user && isProtected) {
+    if (isApiPath) {
+      return new NextResponse(
+        JSON.stringify({ error: "認証が必要です" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
     }
-
-    // 通常のページアクセスの場合はリダイレクト
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/auth";
-    return NextResponse.redirect(redirectUrl);
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth";
+    return NextResponse.redirect(url);
   }
 
-  // 認証済みユーザーが認証ページにアクセスした場合はホームページにリダイレクト
-  if (user && request.nextUrl.pathname.startsWith("/auth")) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/";
-    return NextResponse.redirect(redirectUrl);
+  // ログイン済みが /auth に来たらトップへ
+  if (user && pathname.startsWith("/auth")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
   return response;
 }
-
-export const config = {
-  matcher:
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-};

@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { type NextRequest, type NextResponse } from "next/server";
 
 // 環境変数のチェック
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -30,6 +31,29 @@ export async function createClient() {
         } catch {
           /* no-op */
         }
+      },
+    },
+  });
+}
+
+/**
+ * Middleware 用の Supabase クライアントを作る
+ */
+export function createMiddlewareSupabaseClient(
+  request: NextRequest,
+  response: NextResponse
+) {
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      // NextRequest から全 Cookie を取ってくる
+      getAll() {
+        return request.cookies.getAll();
+      },
+      // Supabase が返す Cookie を NextResponse にセット
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set({ name, value, ...options })
+        );
       },
     },
   });
