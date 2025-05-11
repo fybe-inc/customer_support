@@ -2,7 +2,107 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
-import type { ManualEntry, ProductEntry, Scenario } from "@/types/types";
+import type {
+  ManualEntry,
+  ProductEntry,
+  Scenario,
+  PrecedentEntry,
+} from "@/types/types";
+
+export function useSupabasePrecedents() {
+  const [precedents, setPrecedents] = useState<PrecedentEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPrecedents = async () => {
+      try {
+        setLoading(true);
+
+        // APIからデータを取得
+        const response = await fetch("/api/precedents", {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.error || "マニュアルデータの取得に失敗しました",
+          );
+        }
+
+        const data = await response.json();
+
+        // ステートを更新
+        setPrecedents(data);
+      } catch (error: unknown) {
+        console.error("マニュアルデータの取得エラー:", error);
+        setError(error instanceof Error ? error.message : String(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrecedents();
+  }, []);
+
+  const addPrecedent = async (content: string) => {
+    try {
+      // APIにPOSTリクエストを送信
+      const response = await fetch("/api/precedents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content }),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "マニュアルの追加に失敗しました");
+      }
+
+      // 新しいマニュアルデータを取得
+      const newManual = await response.json();
+
+      // ステートを更新
+      setPrecedents((prev) => [...prev, newManual]);
+
+      return true;
+    } catch (error: unknown) {
+      console.error("マニュアル追加エラー:", error);
+      setError(error instanceof Error ? error.message : String(error));
+      return false;
+    }
+  };
+
+  const deletePrecedent = async (id: string) => {
+    try {
+      // APIにDELETEリクエストを送信
+      const response = await fetch(`/api/precedents?id=${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "マニュアルの削除に失敗しました");
+      }
+
+      // ステートを更新
+      setPrecedents((prev) => prev.filter((manual) => manual.id !== id));
+
+      return true;
+    } catch (error: unknown) {
+      console.error("マニュアル削除エラー:", error);
+      setError(error instanceof Error ? error.message : String(error));
+      return false;
+    }
+  };
+
+  return { precedents, loading, error, addPrecedent, deletePrecedent };
+}
 
 // マニュアルデータを取得するフック
 export function useSupabaseManuals() {

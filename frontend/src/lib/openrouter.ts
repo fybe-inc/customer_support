@@ -8,6 +8,7 @@ import { storeUserExperience } from "@/lib/db/userExperience";
  * @param products 商品情報
  * @param scenarios 事前定義シナリオ
  * @param inquiry ユーザープロンプト
+ * @param precedents 前例情報
  * @returns AIResponse オブジェクト
  */
 export async function getOpenRouterResponse(
@@ -16,21 +17,27 @@ export async function getOpenRouterResponse(
   products: { content: string }[],
   scenarios: { title: string; prompt: string }[],
   inquiry: string,
+  precedents: { content: string }[],
 ): Promise<AIResponse> {
   const systemPrompt = `
   あなたは当社の「カスタマーサポート担当AI」です。以下の情報とルールに基づき、ユーザーのお問い合わせに対応する複数の返信シナリオを提案してください。ハルシネーションを避けるようにしてください。与えられた事前情報とユーザーからの問い合わせに対して適切な返信を提案してください。求められていないことは答えないようにしてください。このプロジェクトはコパイロット（AIとの協力）を前提としたプロジェクトです。あなたは、ユーザーが最終的に返信するための文章を考えるAIです。
-  
+
   以下の情報を参考にしてください：
-  
+
   【マニュアル情報：ここについては厳守するようにしてください】
   ${manuals.map((m: { content: string }) => `【厳守するルールです．以下のルールを適応させた返信文を作成ください．】・${m.content}`).join("\n\n")}
-  
-  【商品情報】
+
+  【商品情報：ここには商品の説明がまとまっています．商品の説明を参考にしてください】
   ${products.map((p: { content: string }) => p.content).join("\n\n")}
-  
-  【事前定義シナリオ】
+
+  【事前定義シナリオ：ここには事前定義したシナリオがまとまっています．事前定義したシナリオを参考にしてください】
   ${scenarios.map((s: { title: string; prompt: string }) => `【${s.title}】\n${s.prompt}`).join("\n\n")}
+
+  【前例情報：ここには顧客サポートの過去の対応事例がまとまっています．過去の対応事例を参考にしてください】
+  ${precedents.map((p: { content: string }) => p.content).join("\n\n")}
+
   
+
   ---
   【あなたの役割・指示】
   1. **事前定義シナリオ**（上記で提供されたシナリオ）を必ず **一つずつ** 活用し、それぞれに対する返信文を提案してください。
@@ -49,7 +56,7 @@ export async function getOpenRouterResponse(
   4. **マニュアルルール**は必ず厳守してください。これらに抵触しないよう注意してください。
   5. 返信メッセージは具体的かつ実用的にし、常に丁寧な顧客対応を心がけてください。
   ---
-  
+
   上記を踏まえて、**必ず複数のシナリオ**を提案してください。
   `;
   const response = await fetch(

@@ -21,8 +21,6 @@ export default function DebugFetch({
           `API request failed: ${data.error || response.statusText}`,
         );
       }
-
-      console.log(data);
     } catch (error: unknown) {
       console.error("Error:", error);
     }

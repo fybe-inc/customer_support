@@ -7,11 +7,11 @@ const protectedPagePaths = ["/", "/manual", "/products", "/scenarios"];
 
 export const config = {
   matcher: [
-    "/",                      // トップページ
-    "/manual/:path*",         // /manual とその下位
-    "/products/:path*",       // /products とその下位
-    "/scenarios/:path*",      // /scenarios とその下位
-    "/api/:path*",            // API 全般
+    "/", // トップページ
+    "/manual/:path*", // /manual とその下位
+    "/products/:path*", // /products とその下位
+    "/scenarios/:path*", // /scenarios とその下位
+    "/api/:path*", // API 全般
   ],
 };
 
@@ -27,16 +27,16 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isApiPath = pathname.startsWith("/api");
   const isProtected = protectedPagePaths.some((p) =>
-    p === "/" ? pathname === "/" : pathname.startsWith(p)
+    p === "/" ? pathname === "/" : pathname.startsWith(p),
   );
 
   // 未ログインかつ保護ページ or API なら
   if (!user && isProtected) {
     if (isApiPath) {
-      return new NextResponse(
-        JSON.stringify({ error: "認証が必要です" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      return new NextResponse(JSON.stringify({ error: "認証が必要です" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
     const url = request.nextUrl.clone();
     url.pathname = "/auth";

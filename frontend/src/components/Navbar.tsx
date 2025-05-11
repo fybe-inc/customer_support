@@ -82,6 +82,14 @@ const Navbar = () => {
                 商品情報管理
               </Link>
             </li>
+            <li>
+              <Link
+                href="/precedents"
+                className="block p-2 text-gray-700 hover:bg-gray-100 rounded"
+              >
+                前例情報管理
+              </Link>
+            </li>
           </ul>
         </div>
 
