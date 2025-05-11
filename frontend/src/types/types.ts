@@ -36,6 +36,13 @@ export interface ProductEntry {
   updated_at?: string;
 }
 
+export interface PrecedentEntry {
+  id: string;
+  content: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface Scenario {
   id: string;
   title: string; // descriptionからtitleに変更

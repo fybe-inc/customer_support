@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { getManuals, addManual, deleteManual } from "@/lib/db/manuals";
+import {
+  getPrecedents,
+  addPrecedent,
+  deletePrecedent,
+} from "@/lib/db/precedents";
 
 // マニュアルデータの取得
 export async function GET() {
@@ -23,7 +27,7 @@ export async function GET() {
     }
 
     // マニュアルデータを取得
-    const { data, error } = await getManuals(user.id);
+    const { data, error } = await getPrecedents(user.id);
 
     if (error) {
       return NextResponse.json(
@@ -72,7 +76,7 @@ export async function POST(request: NextRequest) {
     }
 
     // マニュアルデータを追加
-    const { data, error } = await addManual(user.id, content);
+    const { data, error } = await addPrecedent(user.id, content);
 
     if (error) {
       return NextResponse.json(
@@ -80,6 +84,7 @@ export async function POST(request: NextRequest) {
         { status: 500 },
       );
     }
+
     // レスポンスを返す
     return NextResponse.json({ data });
   } catch (error) {
@@ -120,7 +125,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // マニュアルデータを削除
-    const { success, error } = await deleteManual(user.id, id);
+    const { success, error } = await deletePrecedent(user.id, id);
 
     if (error) {
       return NextResponse.json(

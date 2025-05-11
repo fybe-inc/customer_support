@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { ManualEntry, ProductEntry, Scenario, AIResponse } from "@/types/types";
+import type {
+  ManualEntry,
+  ProductEntry,
+  Scenario,
+  AIResponse,
+  PrecedentEntry,
+} from "@/types/types";
 import { useRouter } from "next/navigation";
 
 // マニュアルデータを取得するフック（API経由）
@@ -308,11 +314,12 @@ export function useApiInquiry() {
     inquiry: string,
     manuals: ManualEntry[],
     products: ProductEntry[],
-    scenarios: Scenario[]
+    scenarios: Scenario[],
+    precedents: PrecedentEntry[],
   ) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch("/api/getResponse", {
         method: "POST",
@@ -323,6 +330,7 @@ export function useApiInquiry() {
           inquiry,
           manuals,
           products,
+          precedents,
           scenarios: scenarios.map((s) => ({
             title: s.title,
             prompt: s.prompt,

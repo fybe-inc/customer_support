@@ -41,7 +41,7 @@ export async function createClient() {
  */
 export function createMiddlewareSupabaseClient(
   request: NextRequest,
-  response: NextResponse
+  response: NextResponse,
 ) {
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -52,7 +52,7 @@ export function createMiddlewareSupabaseClient(
       // Supabase が返す Cookie を NextResponse にセット
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set({ name, value, ...options })
+          response.cookies.set({ name, value, ...options }),
         );
       },
     },

@@ -13,13 +13,11 @@ export async function getManuals(userId: string): Promise<{
   try {
     const supabase = await createClient();
 
-    console.log({ userId });
-
     // Supabaseからデータを取得
-    const { data, error } = await supabase.from("manuals").select("*");
-    // .eq('user_id', userId);
-
-    console.log({ data });
+    const { data, error } = await supabase
+      .from("manuals")
+      .select("*")
+      .eq("user_id", userId);
 
     if (error) {
       console.error("マニュアルデータの取得エラー:", error);
