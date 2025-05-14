@@ -6,10 +6,8 @@ import type {
   ProductEntry,
   Scenario,
   AIResponse,
-  PrecedentEntry,
 } from "@/types/types";
 import { useRouter } from "next/navigation";
-import { getManuals } from "@/lib/db/manuals";
 
 // マニュアルデータを取得するフック（API経由）
 export function useApiManuals() {
@@ -322,7 +320,7 @@ export function useApiInquiry() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          inquiry
+          inquiry,
         }),
       });
 

@@ -15,11 +15,11 @@ export async function getOpenRouterResponse(
   user_id: string,
   inquiry: string,
 ): Promise<AIResponse> {
-  const {data:manuals}=await getManuals(user_id)
-  const {data:products}=await getProducts(user_id)
-  const {data:scenarios}=await getScenarios(user_id)
-  const {data:precedents}=await getPrecedents(user_id)
-  if(!manuals||!products||!scenarios||!precedents){
+  const { data: manuals } = await getManuals(user_id);
+  const { data: products } = await getProducts(user_id);
+  const { data: scenarios } = await getScenarios(user_id);
+  const { data: precedents } = await getPrecedents(user_id);
+  if (!manuals || !products || !scenarios || !precedents) {
     throw new Error("データの取得に失敗しました");
   }
   const systemPrompt = `

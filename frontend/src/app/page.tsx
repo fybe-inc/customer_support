@@ -11,7 +11,6 @@ import AIResponseDisplay from "@/components/AIResponseDisplay";
 import { useApiInquiry } from "@/hooks/useApiData";
 
 export default function Home() {
-
   // 問い合わせ処理用のフック
   const {
     aiResponse,
@@ -20,8 +19,7 @@ export default function Home() {
     submitInquiry,
   } = useApiInquiry();
 
-  const handleInquirySubmit = async (inquiry: string) => { 
-
+  const handleInquirySubmit = async (inquiry: string) => {
     await submitInquiry(inquiry);
 
     // エラーがあれば表示
