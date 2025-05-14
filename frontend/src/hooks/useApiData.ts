@@ -9,6 +9,7 @@ import type {
   PrecedentEntry,
 } from "@/types/types";
 import { useRouter } from "next/navigation";
+import { getManuals } from "@/lib/db/manuals";
 
 // マニュアルデータを取得するフック（API経由）
 export function useApiManuals() {
@@ -310,13 +311,7 @@ export function useApiInquiry() {
   const router = useRouter();
 
   // 問い合わせを送信する関数
-  const submitInquiry = async (
-    inquiry: string,
-    manuals: ManualEntry[],
-    products: ProductEntry[],
-    scenarios: Scenario[],
-    precedents: PrecedentEntry[],
-  ) => {
+  const submitInquiry = async (inquiry: string) => {
     setLoading(true);
     setError(null);
 
@@ -327,14 +322,7 @@ export function useApiInquiry() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          inquiry,
-          manuals,
-          products,
-          precedents,
-          scenarios: scenarios.map((s) => ({
-            title: s.title,
-            prompt: s.prompt,
-          })),
+          inquiry
         }),
       });
 

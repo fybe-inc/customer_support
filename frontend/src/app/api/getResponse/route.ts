@@ -37,11 +37,7 @@ export async function POST(request: Request) {
       // OpenRouterを使用してレスポンスを取得
       const aiResponse = await getOpenRouterResponse(
         user.id,
-        manuals,
-        products,
-        scenarios,
         inquiry,
-        precedents,
       );
       return NextResponse.json(aiResponse);
     } catch (error) {
