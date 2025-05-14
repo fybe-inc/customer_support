@@ -6,7 +6,6 @@ import type {
   ProductEntry,
   Scenario,
   AIResponse,
-  PrecedentEntry,
 } from "@/types/types";
 import { useRouter } from "next/navigation";
 
@@ -310,13 +309,7 @@ export function useApiInquiry() {
   const router = useRouter();
 
   // 問い合わせを送信する関数
-  const submitInquiry = async (
-    inquiry: string,
-    manuals: ManualEntry[],
-    products: ProductEntry[],
-    scenarios: Scenario[],
-    precedents: PrecedentEntry[],
-  ) => {
+  const submitInquiry = async (inquiry: string) => {
     setLoading(true);
     setError(null);
 
@@ -328,13 +321,6 @@ export function useApiInquiry() {
         },
         body: JSON.stringify({
           inquiry,
-          manuals,
-          products,
-          precedents,
-          scenarios: scenarios.map((s) => ({
-            title: s.title,
-            prompt: s.prompt,
-          })),
         }),
       });
 

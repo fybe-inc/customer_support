@@ -1,24 +1,27 @@
 import type { AIResponse } from "@/types/types";
 import { storeUserExperience } from "@/lib/db/userExperience";
-
+import { getManuals } from "./db/manuals";
+import { getProducts } from "./db/products";
+import { getScenarios } from "./db/scenarios";
+import { getPrecedents } from "./db/precedents";
 /**
  * OpenRouterを使用してカスタマーサポートの返信シナリオを取得する関数
  * @param user_id ユーザーID
  * @param manuals マニュアル情報
- * @param products 商品情報
- * @param scenarios 事前定義シナリオ
  * @param inquiry ユーザープロンプト
- * @param precedents 前例情報
  * @returns AIResponse オブジェクト
  */
 export async function getOpenRouterResponse(
   user_id: string,
-  manuals: { content: string }[],
-  products: { content: string }[],
-  scenarios: { title: string; prompt: string }[],
   inquiry: string,
-  precedents: { content: string }[],
 ): Promise<AIResponse> {
+  const { data: manuals } = await getManuals(user_id);
+  const { data: products } = await getProducts(user_id);
+  const { data: scenarios } = await getScenarios(user_id);
+  const { data: precedents } = await getPrecedents(user_id);
+  if (!manuals || !products || !scenarios || !precedents) {
+    throw new Error("データの取得に失敗しました");
+  }
   const systemPrompt = `
   あなたは当社の「カスタマーサポート担当AI」です。以下の情報とルールに基づき、ユーザーのお問い合わせに対応する複数の返信シナリオを提案してください。ハルシネーションを避けるようにしてください。与えられた事前情報とユーザーからの問い合わせに対して適切な返信を提案してください。求められていないことは答えないようにしてください。このプロジェクトはコパイロット（AIとの協力）を前提としたプロジェクトです。あなたは、ユーザーが最終的に返信するための文章を考えるAIです。
 
@@ -35,8 +38,6 @@ export async function getOpenRouterResponse(
 
   【前例情報：ここには顧客サポートの過去の対応事例がまとまっています．過去の対応事例を参考にしてください】
   ${precedents.map((p: { content: string }) => p.content).join("\n\n")}
-
-  
 
   ---
   【あなたの役割・指示】
@@ -59,6 +60,7 @@ export async function getOpenRouterResponse(
 
   上記を踏まえて、**必ず複数のシナリオ**を提案してください。
   `;
+  console.log(systemPrompt);
   const response = await fetch(
     "https://openrouter.ai/api/v1/chat/completions",
     {
@@ -68,7 +70,7 @@ export async function getOpenRouterResponse(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro-exp-03-25",
+        model: "google/gemini-2.5-pro-preview",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: inquiry },

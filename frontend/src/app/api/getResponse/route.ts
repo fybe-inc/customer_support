@@ -30,19 +30,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const { inquiry, manuals, products, scenarios, precedents } =
-      await request.json();
+    const { inquiry } = await request.json();
 
     try {
       // OpenRouterを使用してレスポンスを取得
-      const aiResponse = await getOpenRouterResponse(
-        user.id,
-        manuals,
-        products,
-        scenarios,
-        inquiry,
-        precedents,
-      );
+      const aiResponse = await getOpenRouterResponse(user.id, inquiry);
       return NextResponse.json(aiResponse);
     } catch (error) {
       console.error("OpenRouter API Error:", error);

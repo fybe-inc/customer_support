@@ -2,21 +2,15 @@
 
 import InquiryForm from "@/components/InquiryForm";
 import AIResponseDisplay from "@/components/AIResponseDisplay";
-import {
-  useSupabaseManuals,
-  useSupabasePrecedents,
-  useSupabaseProducts,
-  useSupabaseScenarios,
-} from "@/hooks/useSupabaseData";
+// import {
+//   useSupabaseManuals,
+//   useSupabasePrecedents,
+//   useSupabaseProducts,
+//   useSupabaseScenarios,
+// } from "@/hooks/useSupabaseData";
 import { useApiInquiry } from "@/hooks/useApiData";
 
 export default function Home() {
-  // Supabaseからデータを取得
-  const { manuals, loading: manualsLoading } = useSupabaseManuals();
-  const { products, loading: productsLoading } = useSupabaseProducts();
-  const { scenarios, loading: scenariosLoading } = useSupabaseScenarios();
-  const { precedents, loading: precedentsLoading } = useSupabasePrecedents();
-
   // 問い合わせ処理用のフック
   const {
     aiResponse,
@@ -26,18 +20,7 @@ export default function Home() {
   } = useApiInquiry();
 
   const handleInquirySubmit = async (inquiry: string) => {
-    // データの読み込みが完了していない場合は処理しない
-    if (
-      manualsLoading ||
-      productsLoading ||
-      scenariosLoading ||
-      precedentsLoading
-    ) {
-      alert("データの読み込み中です。しばらくお待ちください。");
-      return;
-    }
-
-    await submitInquiry(inquiry, manuals, products, scenarios, precedents);
+    await submitInquiry(inquiry);
 
     // エラーがあれば表示
     if (inquiryError) {
