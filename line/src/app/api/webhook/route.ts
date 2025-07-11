@@ -15,6 +15,12 @@ export async function POST(req: NextRequest) {
     }
 
     const bodyText = await req.text();
+    
+    // 空のボディの場合は200を返す（LINE Webhook URL検証用）
+    if (!bodyText) {
+      return new NextResponse('OK', { status: 200 });
+    }
+
     const lineClient = new LineClient(channelAccessToken);
 
     if (channelSecret && !(await lineClient.verifySignature(bodyText, signature, channelSecret))) {
@@ -23,16 +29,22 @@ export async function POST(req: NextRequest) {
 
     const body: LineWebhookRequest = JSON.parse(bodyText);
     
+    // イベントがない場合も200を返す
+    if (!body.events || body.events.length === 0) {
+      return new NextResponse('OK', { status: 200 });
+    }
+    
     for (const event of body.events) {
       if (event.type === 'message' && event.message?.type === 'text') {
         await handleTextMessage(event, lineClient);
       }
     }
 
-    return NextResponse.json({ success: true });
+    return new NextResponse('OK', { status: 200 });
   } catch (error) {
     console.error('Webhook error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    // エラーが発生しても200を返す（LINEの仕様）
+    return new NextResponse('OK', { status: 200 });
   }
 }
 
