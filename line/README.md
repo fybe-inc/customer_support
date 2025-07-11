@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LINE Webhook カスタマーサポートアプリ
 
-## Getting Started
+LINE公式アカウントのWebhookを使用したカスタマーサポートアプリケーションです。LINE公式UIとは異なり、トーク返答に特化したインターフェースを提供します。
 
-First, run the development server:
+## 機能
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- LINE公式アカウントへのメッセージをWebhook経由で受信
+- 複数の会話を管理できる会話リスト
+- リアルタイムでのメッセージ送受信
+- トーク返答に特化したUI
+
+## セットアップ
+
+### 環境変数
+
+`.env.local`ファイルに以下の環境変数を設定してください：
+
+```
+LINE_CHANNEL_ACCESS_TOKEN=your_channel_access_token
+LINE_CHANNEL_SECRET=your_channel_secret
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### インストール
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bun install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 開発サーバーの起動
 
-## Learn More
+```bash
+bun run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+### ビルド
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+bun run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## LINE Developers設定
 
-## Deploy on Vercel
+1. LINE Developersコンソールで新しいMessaging APIチャネルを作成
+2. Webhook URLを設定：`https://your-domain.com/api/webhook`
+3. Webhook利用を有効化
+4. チャネルアクセストークンとチャネルシークレットを取得し、環境変数に設定
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API エンドポイント
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `POST /api/webhook` - LINE Webhookイベントを受信
+- `GET /api/webhook` - 保存されたメッセージを取得
+- `POST /api/line/send` - LINEユーザーにメッセージを送信
+
+## 技術スタック
+
+- Next.js 15.3.5
+- TypeScript
+- Tailwind CSS
+- LINE Messaging API
+- Lucide React (アイコン)
