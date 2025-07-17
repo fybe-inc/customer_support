@@ -8,27 +8,7 @@ AI Customer Support System - AIアシスト型のカスタマーサポートプ�
 
 ## Package Manager
 
-**重要**: このプロジェクトでは **Bun** をパッケージマネージャーとして使用しています。
-
-```bash
-# 依存関係のインストール
-cd frontend && bun install
-
-# 開発サーバーの起動（ユーザーが手動で実行）
-cd frontend && bun run dev
-
-# ビルド
-cd frontend && bun run build
-
-# リント
-cd frontend && bun run lint
-
-# 型チェック
-cd frontend && bun run typecheck
-
-# コードフォーマット
-cd frontend && bun run format
-```
+**重要**: このプロジェクトでは **Bun** をパッケージマネージャーとして使用しています。`bun run dev`は絶対に実行しないでください．ユーザーが実行します．
 
 ## Architecture Overview
 

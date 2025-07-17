@@ -1,4 +1,25 @@
-import { LineMessage, LineReplyRequest, LinePushRequest } from '@/types/line';
+// LINE API用の型をここで定義
+export type LineApiMessage = {
+  type: 'text' | 'image' | 'video' | 'audio' | 'file' | 'location' | 'sticker' | 'template' | 'flex';
+  text?: string;
+  originalContentUrl?: string;
+  previewImageUrl?: string;
+};
+
+export type LineReplyRequest = {
+  replyToken: string;
+  messages: LineApiMessage[];
+};
+
+export type LinePushRequest = {
+  to: string;
+  messages: LineApiMessage[];
+};
+
+export const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+if (!channelAccessToken) {
+  throw new Error('LINE_CHANNEL_ACCESS_TOKEN is not set');
+}
 
 export class LineClient {
   private channelAccessToken: string;
@@ -8,7 +29,7 @@ export class LineClient {
     this.channelAccessToken = channelAccessToken;
   }
 
-  async replyMessage(replyToken: string, messages: LineMessage[]): Promise<void> {
+  async replyMessage(replyToken: string, messages: LineApiMessage[]): Promise<void> {
     const body: LineReplyRequest = {
       replyToken,
       messages,
@@ -29,7 +50,7 @@ export class LineClient {
     }
   }
 
-  async pushMessage(to: string, messages: LineMessage[]): Promise<void> {
+  async pushMessage(to: string, messages: LineApiMessage[]): Promise<void> {
     const body: LinePushRequest = {
       to,
       messages,
