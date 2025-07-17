@@ -1,95 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LineWebhookRequest, LineWebhookEvent, StoredMessage } from '@/types/line';
-import { LineClient } from '@/lib/lineClient';
-
-const channelAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN!;
-const channelSecret = process.env.LINE_CHANNEL_SECRET!;
-
-const messages: StoredMessage[] = [];
+import { tables } from '@/lib/db';
+import { createServiceClient } from '@/lib/supabase/service';
+import { getLineUserProfile } from '@/lib/line/profile';
 
 export async function POST(req: NextRequest) {
+  const supabase = createServiceClient();
+  const { lineWebhookEvents, lineChats, lineMessages, lineProfiles } = tables(supabase);
   try {
-    const signature = req.headers.get('x-line-signature');
-    if (!signature) {
-      return NextResponse.json({ error: 'No signature' }, { status: 400 });
-    }
-
-    const bodyText = await req.text();
+    const body = await req.text();
+    console.log('Webhook received:', body);
     
-    // 空のボディの場合は200を返す（LINE Webhook URL検証用）
-    if (!bodyText) {
-      return new NextResponse('OK', { status: 200 });
-    }
-
-    const lineClient = new LineClient(channelAccessToken);
-
-    if (channelSecret && !(await lineClient.verifySignature(bodyText, signature, channelSecret))) {
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
-    }
-
-    const body: LineWebhookRequest = JSON.parse(bodyText);
+    const data = JSON.parse(body);
     
-    // イベントがない場合も200を返す
-    if (!body.events || body.events.length === 0) {
-      return new NextResponse('OK', { status: 200 });
-    }
-    
-    for (const event of body.events) {
+    for (const event of data.events || []) {
+      console.log('Processing event:', event.type, event.message?.type);
+      
+      // Webhookイベントを保存
+      await lineWebhookEvents.save(event);
+      
       if (event.type === 'message' && event.message?.type === 'text') {
-        await handleTextMessage(event, lineClient);
+        console.log('Processing message:', event.message.text);
+        
+        // プロフィール情報を取得
+        console.log('Attempting to get profile for user:', event.source.userId);
+        const profile = await getLineUserProfile(event.source.userId);
+        console.log('Profile result:', profile);
+        
+        // プロフィールを upsert（存在しなければ作成、存在すれば更新）
+        let profileRecord = null;
+        if (profile) {
+          profileRecord = await lineProfiles.upsert({
+            lineUserId: profile.userId,
+            displayName: profile.displayName,
+            pictureUrl: profile.pictureUrl,
+            statusMessage: profile.statusMessage,
+            language: profile.language,
+          });
+          console.log('Profile upserted:', profileRecord ? 'success' : 'failed');
+        }
+        
+        // チャットを取得/作成
+        const chat = await lineChats.getOrCreate(event.source.userId);
+        console.log('Chat created/updated:', chat ? 'success' : 'failed');
+        
+        // チャットにプロフィールを関連付け
+        if (chat && profileRecord) {
+          // profile_idを更新（新しいリレーショナル構造）
+          const { error } = await supabase
+            .from('line_chats')
+            .update({ profile_id: profileRecord.id })
+            .eq('id', chat.id);
+          
+          if (error) {
+            console.error('Error linking profile to chat:', error);
+          } else {
+            console.log('Profile linked to chat successfully');
+          }
+        }
+        
+        if (chat) {
+          // 受信メッセージを保存
+          await lineMessages.save(chat.id, event);
+        }
+        
+        // 自動返信は無効化（UIから手動で返信する）
+        // await replyMessage(event.replyToken, event.message.text);
       }
     }
-
+    
     return new NextResponse('OK', { status: 200 });
   } catch (error) {
     console.error('Webhook error:', error);
-    // エラーが発生しても200を返す（LINEの仕様）
     return new NextResponse('OK', { status: 200 });
   }
 }
 
-async function handleTextMessage(event: LineWebhookEvent, lineClient: LineClient) {
-  if (!event.source.userId || !event.message?.text) return;
 
-  try {
-    const userProfile = await lineClient.getUserProfile(event.source.userId);
-    
-    const userMessage: StoredMessage = {
-      id: `${Date.now()}-user`,
-      userId: event.source.userId,
-      userName: userProfile.displayName,
-      message: event.message.text,
-      timestamp: new Date(event.timestamp),
-      isFromUser: true,
-      replyToken: event.replyToken,
-    };
-    
-    messages.push(userMessage);
-
-    const autoReply = `メッセージを受信しました: "${event.message.text}"\n\nこちらは自動返信です。`;
-    
-    if (event.replyToken) {
-      await lineClient.replyMessage(event.replyToken, [{
-        type: 'text',
-        text: autoReply,
-      }]);
-
-      const botMessage: StoredMessage = {
-        id: `${Date.now()}-bot`,
-        userId: event.source.userId,
-        userName: userProfile.displayName,
-        message: autoReply,
-        timestamp: new Date(),
-        isFromUser: false,
-      };
-      
-      messages.push(botMessage);
-    }
-  } catch (error) {
-    console.error('Error handling message:', error);
-  }
-}
 
 export async function GET() {
-  return NextResponse.json({ messages });
+  return NextResponse.json({ status: 'OK' });
 }
