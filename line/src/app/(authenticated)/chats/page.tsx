@@ -38,7 +38,6 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">チャット一覧</h1>
         
         {chats.length === 0 ? (
           <div className="text-center py-8">
@@ -49,7 +48,7 @@ export default function Page() {
             {chats.map((chat) => (
               <Link
                 key={chat.id}
-                href={`/${chat.id}`}
+                href={`/chats/${chat.id}`}
                 className="block bg-white rounded-lg shadow p-4 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex items-center space-x-3">

@@ -1,53 +1,27 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { Logout } from "../auth/Logout";
-import { useState, createContext, useContext } from "react";
+import { usePathname } from "next/navigation";
 
-interface HeaderContextType {
-  headerTitle: string;
-  setHeaderTitle: (title: string) => void;
-}
-
-const HeaderContext = createContext<HeaderContextType | undefined>(undefined);
-
-export const HeaderProvider = ({ children }: { children: React.ReactNode }) => {
-  const [headerTitle, setHeaderTitle] = useState<string>("");
-  
+export default function Header() {
+  const pathname = usePathname();
+  // "/" または "/[id]"（例: /1234 など）にいる場合はチャットをハイライト
+  const isManualActive = pathname === "/manuals";
+  const isChatActive = pathname === "/chats";
+  const isPrecedentActive = pathname === "/precedents";
+  const isProductActive = pathname === "/products";
+  const isScenarioActive = pathname === "/scenarios";
   return (
-    <HeaderContext.Provider value={{ headerTitle, setHeaderTitle }}>
-      {children}
-    </HeaderContext.Provider>
-  );
-};
-
-export const useHeader = () => {
-  const context = useContext(HeaderContext);
-  if (!context) {
-    throw new Error('useHeader must be used within a HeaderProvider');
-  }
-  return context;
-};
-
-interface HeaderProps {
-  children?: React.ReactNode;
-}
-
-export default function Header({children}:HeaderProps) {
-  const {headerTitle} = useHeader();
-  
-  return (
-    <>
-    <div className="flex justify-between items-center p-4 sticky top-0">
-        <h1>{headerTitle}</h1>
-      <div className="flex items-center gap-4">
-        <Link href="/">Home</Link>
-        <Link href="/chat">Chat</Link>
-        <Link href="/profile">Profile</Link>
-        <Logout />
+    <header className="flex justify-between items-center p-4 sticky top-0">
+      <div className="flex gap-4">
+        <Link href="/chats" className={isChatActive ? "text-blue-500 font-bold" : undefined}>チャット</Link>
+        <Link href="/manuals" className={isManualActive ? "text-blue-500 font-bold" : undefined}>マニュアル</Link>
+        <Link href="/precedents" className={isPrecedentActive ? "text-blue-500 font-bold" : undefined}>過去の例</Link>
+        <Link href="/products" className={isProductActive ? "text-blue-500 font-bold" : undefined}>商品</Link>
+        <Link href="/scenarios" className={isScenarioActive ? "text-blue-500 font-bold" : undefined}>シナリオ</Link>
       </div>
-    </div>
-    {children}
-    </>
+      <Logout />
+    </header>
   );
 }
