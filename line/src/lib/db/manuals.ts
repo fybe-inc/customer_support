@@ -2,8 +2,8 @@ import { Database } from './database.types';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 type Manual = Database['public']['Tables']['manuals']['Row'];
-type ManualInsert = Database['public']['Tables']['manuals']['Insert'];
-type ManualUpdate = Database['public']['Tables']['manuals']['Update'];
+// type ManualInsert = Database['public']['Tables']['manuals']['Insert'];
+// type ManualUpdate = Database['public']['Tables']['manuals']['Update'];
 
 export const Manuals = (supabase: SupabaseClient<Database, "public", Database["public"]>) => {
   const create = async (manualData: {

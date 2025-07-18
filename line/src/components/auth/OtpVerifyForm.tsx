@@ -23,7 +23,7 @@ export default function OtpVerifyForm({ email, onBack }: OtpVerifyFormProps) {
     try {
       const { error } = await verifyOtp(email, otp);
       if (error) throw error;
-      router.push('/');
+      router.push('/chats');
     } catch (error: unknown) {
       setError((error as Error).message || 'OTPコードが無効です');
     } finally {
