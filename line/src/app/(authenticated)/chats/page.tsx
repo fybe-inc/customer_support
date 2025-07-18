@@ -4,14 +4,16 @@ import { useState, useEffect } from 'react';
 import { tables } from '@/lib/db';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
+import { subscribeLineChats } from '@/lib/realtime/line_chats';
 export default function Page() {
   const [chats, setChats] = useState<Array<{ id: string; display_name: string | null; line_user_id: string; updated_at: string | null; profile?: { display_name: string; picture_url: string | null; status_message: string | null } | null }>>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
+    const supabase = createClient();
+    const { lineChats } = tables(supabase);
+
     const loadChats = async () => {
       try {
-        const supabase = createClient();
-        const {lineChats} = tables(supabase);
         const chatsData = await lineChats.findAllWithProfiles();
         setChats(chatsData);
       } catch (error) {
@@ -22,6 +24,15 @@ export default function Page() {
     };
 
     loadChats();
+
+    // --- realtime購読 ---
+    const unsubscribe = subscribeLineChats(supabase, () => {
+      loadChats();
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   if (loading) {
